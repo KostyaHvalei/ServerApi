@@ -15,5 +15,10 @@ namespace Repository
 			: base(repositoryContext)
 		{
 		}
+
+		public IEnumerable<FridgeModel> GetAllFridgeModels(bool trackChanges) =>
+			FindAll(trackChanges)
+			.OrderBy(fm => fm.Name)
+			.ToList();
 	}
 }

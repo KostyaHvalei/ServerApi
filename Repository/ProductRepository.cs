@@ -16,5 +16,10 @@ namespace Repository
 		{
 
 		}
+
+		public IEnumerable<Product> GetAllProducts(bool trackChanges) =>
+			FindAll(trackChanges)
+			.OrderBy(p => p.Name)
+			.ToList();
 	}
 }

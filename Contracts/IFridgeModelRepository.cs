@@ -15,5 +15,7 @@ namespace Contracts
 		void Create(FridgeModel entity);
 		void Update(FridgeModel entity);
 		void Delete(FridgeModel entity);
+
+		IEnumerable<FridgeModel> GetAllFridgeModels(bool trackChanges);
 	}
 }

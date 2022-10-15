@@ -32,7 +32,7 @@ namespace ServerApi.Controllers
 		[HttpGet]
 		public IActionResult Get()
 		{
-			var res = _repository.Fridge.FindAll(false).Include(c => c.FridgeProducts).Select(p => new { Name = p.Name, FridgeProds = p.FridgeProducts.ToList() }).ToList();
+			var res = _repository.Fridge.GetAllFridges(true);
 
 			return Ok(res);
 		}
