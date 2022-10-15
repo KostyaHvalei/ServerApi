@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Entities;
 using Entities.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,5 +22,8 @@ namespace Repository
 			FindAll(trackChanges)
 			.OrderBy(p => p.Name)
 			.ToList();
+
+		public Product GetProduct(Guid productId, bool trackChanges) =>
+			FindByCondition(f => f.Id.Equals(productId), trackChanges).Include(p => p.Fridges).SingleOrDefault();
 	}
 }

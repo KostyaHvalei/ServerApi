@@ -17,5 +17,6 @@ namespace Contracts
 		void Delete(Fridge entity);
 
 		IEnumerable<Fridge> GetAllFridges(bool trackChanges);
+		public Fridge GetFridge(Guid Id, bool trackChanges);
 	}
 }

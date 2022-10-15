@@ -20,5 +20,9 @@ namespace Repository
 			FindAll(trackChanges)
 			.OrderBy(fm => fm.Name)
 			.ToList();
+
+		public FridgeModel GetFridgeModel(Guid fridgeModelId, bool trackChanges) =>
+			FindByCondition(fm => fm.Id.Equals(fridgeModelId), trackChanges).SingleOrDefault();
+		
 	}
 }

@@ -17,5 +17,6 @@ namespace Contracts
 		void Delete(Product entity);
 
 		IEnumerable<Product> GetAllProducts(bool trackChanges);
+		public Product GetProduct(Guid productId, bool trackChanges);
 	}
 }

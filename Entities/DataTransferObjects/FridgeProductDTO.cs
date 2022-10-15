@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Entities.DataTransferObjects
 {
-	internal class FridgeProductDTO
+	public class FridgeProductDTO
 	{
+		public Guid ProductId { get; set; }
 		public string ProductName { get; set; }
 		public int Quantity { get; set; }
 	}
