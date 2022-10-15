@@ -6,10 +6,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
+using ServerApi.Extensions;
 
 namespace ServerApi
 {
@@ -17,6 +20,7 @@ namespace ServerApi
 	{
 		public Startup(IConfiguration configuration)
 		{
+			LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
 			Configuration = configuration;
 		}
 
@@ -25,6 +29,10 @@ namespace ServerApi
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.ConfigureCors();
+			services.ConfigureIISIntegration();
+			services.ConfigureLoggerService();
+			services.ConfigureSqlContext(Configuration);
 
 			services.AddControllers();
 		}
@@ -38,6 +46,14 @@ namespace ServerApi
 			}
 
 			app.UseHttpsRedirection();
+			app.UseStaticFiles();
+
+			app.UseCors("CorsPolicy");
+
+			app.UseForwardedHeaders(new ForwardedHeadersOptions
+			{
+				ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.All
+			});
 
 			app.UseRouting();
 
