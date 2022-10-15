@@ -18,5 +18,7 @@ namespace Contracts
 
 		IEnumerable<Fridge> GetAllFridges(bool trackChanges);
 		public Fridge GetFridge(Guid Id, bool trackChanges);
+		public void CreateFridge(Fridge entity);
+
 	}
 }

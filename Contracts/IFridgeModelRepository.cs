@@ -18,5 +18,6 @@ namespace Contracts
 
 		IEnumerable<FridgeModel> GetAllFridgeModels(bool trackChanges);
 		public FridgeModel GetFridgeModel(Guid fridgeModelId, bool trackChanges);
+		void CreateFridgeModel(FridgeModel fridgeModel);
 	}
 }

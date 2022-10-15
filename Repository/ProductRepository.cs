@@ -25,5 +25,7 @@ namespace Repository
 
 		public Product GetProduct(Guid productId, bool trackChanges) =>
 			FindByCondition(f => f.Id.Equals(productId), trackChanges).Include(p => p.Fridges).SingleOrDefault();
+
+		public void CreateProduct(Product product) => Create(product);
 	}
 }

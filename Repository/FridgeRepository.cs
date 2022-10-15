@@ -26,5 +26,7 @@ namespace Repository
 
 		public Fridge GetFridge(Guid fridgeId, bool trackChanges) =>
 			FindByCondition(f => f.Id.Equals(fridgeId), trackChanges).Include(f => f.Products).Include(f => f.FridgeModel).Include(f => f.FridgeProducts).ThenInclude(fp => fp.Product).SingleOrDefault();
+
+		public void CreateFridge(Fridge fridge) => Create(fridge);
 	}
 }

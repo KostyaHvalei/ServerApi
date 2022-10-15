@@ -5,6 +5,7 @@ using System.Linq;
 using System;
 using Entities.DataTransferObjects;
 using System.Collections.Generic;
+using Entities.Models;
 
 namespace ServerApi.Controllers
 {
@@ -45,7 +46,7 @@ namespace ServerApi.Controllers
 			}
 		}
 
-		[HttpGet("{id}")]
+		[HttpGet("{id}", Name = "GetFridgeById")]
 		public IActionResult GetFrige(Guid id)
 		{
 			var fridge = _repository.Fridge.GetFridge(id, false);
@@ -66,6 +67,32 @@ namespace ServerApi.Controllers
 				};
 				return Ok(fridgeDTO);
 			}
+		}
+
+		[HttpPost]
+		public IActionResult CreateFridge([FromBody] FridgeToCreationDTO fridge)
+		{
+			if (fridge == null)
+			{
+				_logger.LogError("FridgeModelToCreationDTO object sent from client is null");
+				return BadRequest("FridgeModelToCreationDTO object in null");
+			}
+
+			var fridgeModel = _repository.FridgeModel.FindByCondition(model => model.Id == fridge.FridgeModelId, false).FirstOrDefault();
+
+			if (fridgeModel == null)
+			{
+				_logger.LogError($"There is no fridge model with {fridge.FridgeModelId}");
+				return BadRequest($"There is no fridge model with {fridge.FridgeModelId}");
+			}
+
+			Fridge fridge_to_create = new Fridge { Name = fridge.Name, OwnerName = fridge.OwnerName, FridgeModelId = fridge.FridgeModelId };
+			_repository.Fridge.Create(fridge_to_create);
+			_repository.Save();
+
+			var fridgeDTO = new FridgeDTO { Id = fridge_to_create.Id, Name = fridge_to_create.Name, OwnerName = fridge_to_create.OwnerName, ModelName = fridgeModel.Name };
+
+			return CreatedAtRoute("GetFridgeById", new { id = fridge_to_create.Id }, fridgeDTO);
 		}
 	}
 }

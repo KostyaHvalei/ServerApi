@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using Entities.DataTransferObjects;
+using Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -42,10 +43,11 @@ namespace ServerApi.Controllers
 			}
 		}
 
-		[HttpGet("{id}")]
+		[HttpGet("{id}", Name = "FridgeById")]
 		public IActionResult GetFrigeModel(Guid id)
 		{
 			var fridgemodel = _repository.FridgeModel.GetFridgeModel(id, false);
+
 			if(fridgemodel == null)
 			{
 				_logger.LogInfo($"Fridge with id {id} doesn't exists");
@@ -56,6 +58,24 @@ namespace ServerApi.Controllers
 				var fridgemodelDTO = new FridgeModelDTO { Id = fridgemodel.Id, Name = fridgemodel.Name, Year = fridgemodel.Year };
 				return Ok(fridgemodelDTO);
 			}
+		}
+
+		[HttpPost]
+		public IActionResult CreateFridgeModel([FromBody]FridgeModelToCreationDTO fridgeModel)
+		{
+			if(fridgeModel == null)
+			{
+				_logger.LogError("FridgeModelToCreationDTO object sent from client is null");
+				return BadRequest("FridgeModelToCreationDTO object in null");
+			}
+
+			FridgeModel fridge = new FridgeModel { Name = fridgeModel.Name, Year = fridgeModel.Year };
+			_repository.FridgeModel.Create(fridge);
+			_repository.Save();
+
+			var fridgeModelDTO = new FridgeModelDTO { Id = fridge.Id, Name= fridge.Name, Year = fridge.Year };
+
+			return CreatedAtRoute("FridgeById", new { id = fridgeModelDTO.Id }, fridgeModelDTO);
 		}
 	}
 }
