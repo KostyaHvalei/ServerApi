@@ -1,4 +1,5 @@
 ﻿using Entities.Models;
+using Entities.DataTransferObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,6 @@ namespace Contracts
 		IEnumerable<Fridge> GetAllFridges(bool trackChanges);
 		public Fridge GetFridge(Guid Id, bool trackChanges);
 		public void CreateFridge(Fridge entity);
-
+		public void AddProductToFridge(Guid fridgeId, Product product, int quantity);
 	}
 }

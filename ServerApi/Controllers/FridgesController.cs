@@ -94,5 +94,52 @@ namespace ServerApi.Controllers
 
 			return CreatedAtRoute("GetFridgeById", new { id = fridge_to_create.Id }, fridgeDTO);
 		}
+
+
+		/*
+		 * If there is no such product in the fridge - add product
+		 * If there is - change quantity
+		 * Quantity can be negative - this reduses the quantity
+		 * if quanity is null or less product will be deleted from fridge!!!!!FFFFFIIIIIXXXXX it
+		 */
+		[HttpPost("{fridgeId}")]
+		public IActionResult AddProductToFridge(Guid fridgeId, [FromBody] ProductToAddInFridgeDTO productDTO)
+		{
+			if(productDTO == null)
+			{
+				_logger.LogError("Product object sent from client is null.");
+				return BadRequest("Product object is null");
+			}
+
+			int quantity = productDTO.Quantity;
+
+			var product = _repository.Product.FindByCondition(p => p.Id == productDTO.ProductId, false).FirstOrDefault();
+			if(product == null)
+			{
+				_logger.LogError("There is no product with this id.");
+				return BadRequest("There is no product with this id");
+			}
+			
+			var fridge = _repository.Fridge.GetFridge(fridgeId, false);
+			if (fridge == null)
+			{
+				_logger.LogError("There is no fridge with this id.");
+				return BadRequest("There is no fridge with this id");
+			}
+
+			_repository.Fridge.AddProductToFridge(fridgeId, product, quantity);
+			_repository.Save();
+
+			var fridgeDTO = new FridgeProductsDTO
+			{
+				FridgeId = fridge.Id,
+				FridgeName = fridge.Name,
+				ModelName = fridge.FridgeModel.Name,
+				OwnerName = fridge.OwnerName,
+				Products = fridge.FridgeProducts.Select(fp => new FridgeProductDTO { ProductId = fp.Id, ProductName = fp.Product.Name, Quantity = fp.Quantity })
+			};
+
+			return CreatedAtRoute("GetFridgeById", new { id = fridge.Id }, fridgeDTO);
+		}
 	}
 }
