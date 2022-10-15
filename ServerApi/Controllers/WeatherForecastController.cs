@@ -1,10 +1,13 @@
 ﻿using Contracts;
+using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 
 namespace ServerApi.Controllers
 {
@@ -18,28 +21,20 @@ namespace ServerApi.Controllers
 		};
 
 		private readonly ILoggerManager _logger;
+		private readonly IRepositoryManager _repository;
 
-		public WeatherForecastController(ILoggerManager logger)
+		public WeatherForecastController(ILoggerManager logger, IRepositoryManager repository)
 		{
 			_logger = logger;
+			_repository = repository;
 		}
 
 		[HttpGet]
-		public IEnumerable<WeatherForecast> Get()
+		public IActionResult Get()
 		{
-			_logger.LogInfo("info msg");
-			_logger.LogWarn("info msg");
-			_logger.LogError("info msg");
-			_logger.LogDebug("info msg");
+			var res = _repository.Fridge.FindAll(false).Include(c => c.FridgeProducts).Select(p => new { Name = p.Name, FridgeProds = p.FridgeProducts.ToList() }).ToList();
 
-			var rng = new Random();
-			return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-			{
-				Date = DateTime.Now.AddDays(index),
-				TemperatureC = rng.Next(-20, 55),
-				Summary = Summaries[rng.Next(Summaries.Length)]
-			})
-			.ToArray();
+			return Ok(res);
 		}
 	}
 }

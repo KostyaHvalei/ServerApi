@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Entities;
+using Repository;
 
 namespace ServerApi.Extensions
 {
@@ -39,6 +40,11 @@ namespace ServerApi.Extensions
 			{
 				opts.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("ServerApi"));
 			});
+		}
+
+		public static void ConfigureRepositoryManager(this IServiceCollection services)
+		{
+			services.AddScoped<IRepositoryManager, RepositoryManager>();
 		}
 	}
 }
