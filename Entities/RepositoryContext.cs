@@ -1,4 +1,5 @@
 ﻿using System;
+using Entities.Configuration;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,6 +32,11 @@ namespace Entities
 						fp.HasKey(fp => fp.Id);
 						fp.ToTable("FridgeProducts");
 					});
+
+			modelBuilder.ApplyConfiguration(new FridgeModelConfiguration());
+			modelBuilder.ApplyConfiguration(new FridgeConfiguration());
+			modelBuilder.ApplyConfiguration(new ProductConfiguration());
+			modelBuilder.ApplyConfiguration(new FridgeProductConfiguration());
 		}
 
 		public DbSet<Product> Products { get; set; }
