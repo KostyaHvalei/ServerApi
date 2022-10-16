@@ -68,6 +68,12 @@ namespace ServerApi.Controllers
 				return BadRequest("FridgeModelToCreationDTO object in null");
 			}
 
+			if (!ModelState.IsValid)
+			{
+				_logger.LogError("Invalid model state for the ProductToCreationDTO object");
+				return UnprocessableEntity(ModelState);
+			}
+
 			Product product_to_create = new Product { Name = product.Name, DefaultQuantity = product.DefaultQuantity };
 			_repository.Product.Create(product_to_create);
 			_repository.Save();
@@ -84,6 +90,12 @@ namespace ServerApi.Controllers
 			{
 				_logger.LogError("ProductToUpdateDTO object sent from client is null.");
 				return BadRequest("ProductToUpdateDTO object is null");
+			}
+
+			if (!ModelState.IsValid)
+			{
+				_logger.LogError("Invalid model state for the ProductToUpdateDTO object");
+				return UnprocessableEntity(ModelState);
 			}
 
 			var _product = _repository.Product.GetProduct(productId, true);

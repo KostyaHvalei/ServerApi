@@ -87,6 +87,12 @@ namespace ServerApi.Controllers
 				return BadRequest($"There is no fridge model with {fridge.FridgeModelId}");
 			}
 
+			if (!ModelState.IsValid)
+			{
+				_logger.LogError("Invalid model state for the FridgeToCreationDTO object");
+				return UnprocessableEntity(ModelState);
+			}
+
 			Fridge fridge_to_create = new Fridge { Name = fridge.Name, OwnerName = fridge.OwnerName, FridgeModelId = fridge.FridgeModelId };
 			_repository.Fridge.Create(fridge_to_create);
 			_repository.Save();
@@ -111,6 +117,12 @@ namespace ServerApi.Controllers
 			{
 				_logger.LogError("Product object sent from client is null.");
 				return BadRequest("Product object is null");
+			}
+
+			if (!ModelState.IsValid)
+			{
+				_logger.LogError("Invalid model state for the ProductToAddInFridgeDTO object");
+				return UnprocessableEntity(ModelState);
 			}
 
 			int quantity = productDTO.Quantity;
@@ -151,6 +163,12 @@ namespace ServerApi.Controllers
 			{
 				_logger.LogError("FridgeToUpdateDTO object sent from client is null.");
 				return BadRequest("FridgeToUpdateDTO object is null");
+			}
+
+			if (!ModelState.IsValid)
+			{
+				_logger.LogError("Invalid model state for the FridgeToUpdateDTO object");
+				return UnprocessableEntity(ModelState);
 			}
 
 			var _fridge = _repository.Fridge.GetFridge(fridgeId, true);

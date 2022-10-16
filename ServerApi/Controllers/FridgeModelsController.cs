@@ -69,6 +69,12 @@ namespace ServerApi.Controllers
 				return BadRequest("FridgeModelToCreationDTO object in null");
 			}
 
+			if (!ModelState.IsValid)
+			{
+				_logger.LogError("Invalid model state for the FridgeModelToCreationDTO object");
+				return UnprocessableEntity(ModelState);
+			}
+
 			FridgeModel fridge = new FridgeModel { Name = fridgeModel.Name, Year = fridgeModel.Year };
 			_repository.FridgeModel.Create(fridge);
 			_repository.Save();
@@ -85,6 +91,12 @@ namespace ServerApi.Controllers
 			{
 				_logger.LogError("FridgeModelToUpdateDTO object sent from client is null.");
 				return BadRequest("FridgeModelToUpdateDTO object is null");
+			}
+
+			if (!ModelState.IsValid)
+			{
+				_logger.LogError("Invalid model state for the FridgeModelToUpdateDTO object");
+				return UnprocessableEntity(ModelState);
 			}
 
 			var fm = _repository.FridgeModel.GetFridgeModel(fridgeModelId, true);

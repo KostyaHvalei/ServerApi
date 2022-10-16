@@ -40,6 +40,11 @@ namespace ServerApi
 				config.RespectBrowserAcceptHeader = true;
 				config.ReturnHttpNotAcceptable = true;
 			}).AddXmlDataContractSerializerFormatters();
+
+			services.Configure<ApiBehaviorOptions>(options =>
+			{
+				options.SuppressModelStateInvalidFilter = true;
+			});
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
