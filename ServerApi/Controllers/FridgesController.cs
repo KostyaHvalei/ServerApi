@@ -7,6 +7,7 @@ using Entities.DataTransferObjects;
 using System.Collections.Generic;
 using Entities.Models;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using Entities;
 
 namespace ServerApi.Controllers
 {
@@ -71,10 +72,28 @@ namespace ServerApi.Controllers
 			}
 		}
 
+		//TODO: error with multi tracking of Poducts
 		[HttpGet("[action]")]
 		public IActionResult UpdateFrigdeProducts()
 		{
-			return Ok();
+			int count = 0;
+			(var prodId, var fridId) = _repository.Fridge.GetFridgeProductWithZeroQuantity();
+
+
+			while(prodId != Guid.Empty && fridId != Guid.Empty)
+			{
+				int? def_quant = _repository.Product.GetDefaultQuantity(prodId);
+
+				_repository.Save();
+				if (def_quant != null && def_quant != 0)
+				{
+					AddProductToFridge(fridId, new ProductToAddInFridgeDTO { ProductId = prodId, Quantity = (int)def_quant });
+					count++;
+				}
+				(prodId, fridId) = _repository.Fridge.GetFridgeProductWithZeroQuantity();
+			}
+
+			return Ok($"{count} objects updated");
 		}
 
 		[HttpPost]

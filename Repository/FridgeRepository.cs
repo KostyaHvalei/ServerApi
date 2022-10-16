@@ -2,9 +2,11 @@
 using Entities;
 using Entities.DataTransferObjects;
 using Entities.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,7 +44,10 @@ namespace Repository
 			if (fp != null)
 			{
 				if(fp.Quantity + quantity >= 0)
+				{
 					fp.Quantity += quantity;
+					Update(fridge);
+				}
 				else
 				{
 					fridge.Products.Remove(product);
@@ -55,14 +60,49 @@ namespace Repository
 				var frigeProduct = new FridgeProduct { Fridge = fridge, FridgeId = fridge.Id, Product = product, ProductId = product.Id, Quantity = quantity };
 				fridge.Products.Add(product);
 				fridge.FridgeProducts.Add(frigeProduct);
+				Update(fridge);
 			}
-			
-			Update(fridge);
 		}
 
 		public (Guid firdgeId, Guid productId) GetFridgeProductWithZeroQuantity()
 		{
-			return (Guid.Empty, Guid.Empty);
+			var parameter = new List<SqlParameter>();
+			parameter.Add(
+				new SqlParameter
+				{
+					ParameterName = "@productId",
+					DbType = DbType.Guid,
+					Direction = ParameterDirection.Output
+				});
+			parameter.Add(
+				new SqlParameter
+				{
+					ParameterName = "@fridgeId",
+					DbType = DbType.Guid,
+					Direction = ParameterDirection.Output
+				});
+			parameter.Add(
+				new SqlParameter
+				{
+					ParameterName = "@status",
+					DbType = DbType.Boolean,
+					Direction = ParameterDirection.Output
+				});
+
+			var result = context.Database.ExecuteSqlRaw(@"exec GetFridgeProductWithZeroQuantity
+											@productId OUT, @fridgeId OUT, @status OUT", parameter.ToArray());
+
+			
+
+			bool status = bool.Parse(parameter[2].Value.ToString());
+			if (status)
+			{
+				Guid prodId = Guid.Parse(parameter[0].Value.ToString());
+				Guid fridId = Guid.Parse(parameter[1].Value.ToString());
+				return (prodId, fridId);
+			}
+			else
+				return (Guid.Empty, Guid.Empty);
 		}
 
 		public void DeleteFridge(Fridge fridge) => Delete(fridge);
