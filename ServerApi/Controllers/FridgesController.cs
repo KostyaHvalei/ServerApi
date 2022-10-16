@@ -6,6 +6,7 @@ using System;
 using Entities.DataTransferObjects;
 using System.Collections.Generic;
 using Entities.Models;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace ServerApi.Controllers
 {
@@ -141,6 +142,29 @@ namespace ServerApi.Controllers
 			};
 
 			return CreatedAtRoute("GetFridgeById", new { id = fridge.Id }, fridgeDTO);
+		}
+
+		[HttpPut("{fridgeId}")]
+		public IActionResult UpdateFridge(Guid fridgeId, [FromBody] FridgeToUpdateDTO fridge)
+		{
+			if (fridge == null)
+			{
+				_logger.LogError("FridgeToUpdateDTO object sent from client is null.");
+				return BadRequest("FridgeToUpdateDTO object is null");
+			}
+
+			var _fridge = _repository.Fridge.GetFridge(fridgeId, true);
+			if (_fridge == null)
+			{
+				_logger.LogInfo($"Fridge with id: {fridgeId} doesn't exist in the database.");
+				return NotFound();
+			}
+
+			_fridge.Name = fridge.Name;
+			_fridge.OwnerName = fridge.OwnerName;
+			_repository.Save();
+
+			return NoContent();
 		}
 
 		[HttpDelete("{fridgeId}")]

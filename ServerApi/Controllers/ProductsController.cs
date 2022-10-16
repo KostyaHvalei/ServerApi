@@ -77,6 +77,29 @@ namespace ServerApi.Controllers
 			return CreatedAtRoute("GetProductById", new { id = product_to_create.Id }, productDTO);
 		}
 
+		[HttpPut("{productId}")]
+		public IActionResult UpdateFridge(Guid productId, [FromBody] ProductToUpdateDTO product)
+		{
+			if (product == null)
+			{
+				_logger.LogError("ProductToUpdateDTO object sent from client is null.");
+				return BadRequest("ProductToUpdateDTO object is null");
+			}
+
+			var _product = _repository.Product.GetProduct(productId, true);
+			if (_product == null)
+			{
+				_logger.LogInfo($"Product with id: {productId} doesn't exist in the database.");
+				return NotFound();
+			}
+
+			_product.Name = product.Name;
+			_product.DefaultQuantity = product.DefaultQuantity;
+			_repository.Save();
+
+			return NoContent();
+		}
+
 		[HttpDelete("{productId}")]
 		public IActionResult DeleteFridgeModel(Guid productId)
 		{

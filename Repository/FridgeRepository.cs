@@ -32,6 +32,7 @@ namespace Repository
 
 		public void AddProductToFridge(Guid fridgeId, Product product, int quantity)
 		{
+			//Maybe trackChanges
 			var fridge = FindByCondition(f => f.Id == fridgeId, false).Include(f => f.FridgeProducts).ThenInclude(fp => fp.Product).FirstOrDefault();
 
 			var fp = fridge.FridgeProducts.Find(fp => fp.FridgeId == fridge.Id && fp.ProductId == product.Id);
