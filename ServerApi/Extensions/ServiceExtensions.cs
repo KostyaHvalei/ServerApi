@@ -6,6 +6,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Entities;
 using Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System;
+using System.Runtime.CompilerServices;
+using Microsoft.OpenApi.Models;
 
 namespace ServerApi.Extensions
 {
@@ -45,6 +52,42 @@ namespace ServerApi.Extensions
 		public static void ConfigureRepositoryManager(this IServiceCollection services)
 		{
 			services.AddScoped<IRepositoryManager, RepositoryManager>();
+		}
+
+		public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
+		{
+			var jwtSettings = configuration.GetSection("JwtSettings");
+
+			services.AddAuthentication(opt => {
+				opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+				opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+			})
+			.AddJwtBearer(options =>
+			{
+				options.TokenValidationParameters = new TokenValidationParameters
+				{
+					ValidateIssuer = true,
+					ValidateAudience = true,
+					ValidateLifetime = true,
+					ValidateIssuerSigningKey = true,
+					ValidIssuer = jwtSettings.GetSection("validIssuer").Value,
+					ValidAudience = jwtSettings.GetSection("validAudience").Value,
+					IssuerSigningKey = new
+					SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.GetSection("SecretKey").ToString()))
+				};
+			});
+		}
+
+		public static void ConfigureSwagger(this IServiceCollection services)
+		{
+			services.AddSwaggerGen(s =>
+			{
+				s.SwaggerDoc("v1", new OpenApiInfo
+				{
+					Title = "Code Maze API",
+					Version = "v1"
+				});
+			});
 		}
 	}
 }

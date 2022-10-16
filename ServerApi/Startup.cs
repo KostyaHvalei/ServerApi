@@ -34,6 +34,8 @@ namespace ServerApi
 			services.ConfigureLoggerService();
 			services.ConfigureSqlContext(Configuration);
 			services.ConfigureRepositoryManager();
+			services.ConfigureJWT(Configuration);
+			services.ConfigureSwagger();
 
 			services.AddControllers(config =>
 			{
@@ -65,8 +67,15 @@ namespace ServerApi
 				ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.All
 			});
 
+			app.UseSwagger();
+			app.UseSwaggerUI(s =>
+			{
+				s.SwaggerEndpoint("/swagger/v1/swagger.json", "Code Maze API v1");
+			});
+
 			app.UseRouting();
 
+			app.UseAuthentication();
 			app.UseAuthorization();
 
 			app.UseEndpoints(endpoints =>

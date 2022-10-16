@@ -12,6 +12,7 @@ namespace ServerApi.Controllers
 {
 	[Route("api/fridges")]
 	[ApiController]
+	[ApiExplorerSettings(GroupName = "v1")]
 	public class FridgesController : ControllerBase
 	{
 		private readonly IRepositoryManager _repository;
@@ -68,6 +69,12 @@ namespace ServerApi.Controllers
 				};
 				return Ok(fridgeDTO);
 			}
+		}
+
+		[HttpGet("[action]")]
+		public IActionResult UpdateFrigdeProducts()
+		{
+			return Ok();
 		}
 
 		[HttpPost]

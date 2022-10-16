@@ -10,6 +10,7 @@ namespace ServerApi.Controllers
 {
 	[Route("api/models")]
 	[ApiController]
+	[ApiExplorerSettings(GroupName = "v1")]
 	public class FridgeModelsController : ControllerBase
 	{
 		private readonly IRepositoryManager _repository;

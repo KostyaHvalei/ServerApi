@@ -10,6 +10,7 @@ namespace ServerApi.Controllers
 {
 	[Route("api/products")]
 	[ApiController]
+	[ApiExplorerSettings(GroupName = "v1")]
 	public class ProductsController : ControllerBase
 	{
 		private readonly IRepositoryManager _repository;

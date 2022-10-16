@@ -22,5 +22,10 @@ namespace Contracts
 		public void CreateFridge(Fridge entity);
 		public void AddProductToFridge(Guid fridgeId, Product product, int quantity);
 		public void DeleteFridge(Fridge fridge);
+
+		public Guid FindZeroQuantityFridgeProduct()
+		{
+			return Guid.Empty;
+		}
 	}
 }

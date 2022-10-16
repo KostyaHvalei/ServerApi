@@ -93,6 +93,7 @@ namespace ServerApi.Migrations
                 name: "IX_Fridges_FridgeModelId",
                 table: "Fridges",
                 column: "FridgeModelId");
+
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
