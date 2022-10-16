@@ -101,6 +101,7 @@ namespace ServerApi.Controllers
 		 * If there is - change quantity
 		 * Quantity can be negative - this reduses the quantity
 		 * if quanity is null or less product will be deleted from fridge!!!!!FFFFFIIIIIXXXXX it
+		 * Temp fix it to set quantity to 0
 		 */
 		[HttpPost("{fridgeId}")]
 		public IActionResult AddProductToFridge(Guid fridgeId, [FromBody] ProductToAddInFridgeDTO productDTO)
@@ -140,6 +141,22 @@ namespace ServerApi.Controllers
 			};
 
 			return CreatedAtRoute("GetFridgeById", new { id = fridge.Id }, fridgeDTO);
+		}
+
+		[HttpDelete("{id}")]
+		public IActionResult DeleteFridge(Guid fridgeId)
+		{
+			var fridge = _repository.Fridge.GetFridge(fridgeId, false);
+			if (fridge == null)
+			{
+				_logger.LogInfo($"Fridge with id: {fridgeId} doesn't exist in the database.");
+				return NotFound();
+			}
+
+			_repository.Fridge.DeleteFridge(fridge);
+			_repository.Save();
+
+			return NoContent();
 		}
 	}
 }

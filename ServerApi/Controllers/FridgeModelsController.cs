@@ -77,5 +77,21 @@ namespace ServerApi.Controllers
 
 			return CreatedAtRoute("FridgeById", new { id = fridgeModelDTO.Id }, fridgeModelDTO);
 		}
+
+		[HttpDelete("{id}")]
+		public IActionResult DeleteFridgeModel(Guid fridgeModelId)
+		{
+			var fridgeModel = _repository.FridgeModel.GetFridgeModel(fridgeModelId, false);
+			if(fridgeModel == null)
+			{
+				_logger.LogInfo($"Fridge with id: {fridgeModelId} doesn't exist in the database.");
+				return NotFound();
+			}
+
+			_repository.FridgeModel.DeleteFridgeModel(fridgeModel);
+			_repository.Save();
+
+			return NoContent();
+		}
 	}
 }

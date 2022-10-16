@@ -38,7 +38,7 @@ namespace Repository
 
 			if (fp != null)
 			{
-				if(fp.Quantity + quantity > 0)
+				if(fp.Quantity + quantity >= 0)
 					fp.Quantity += quantity;
 				else
 				{
@@ -56,5 +56,7 @@ namespace Repository
 			
 			Update(fridge);
 		}
+
+		public void DeleteFridge(Fridge fridge) => Delete(fridge);
 	}
 }

@@ -76,7 +76,21 @@ namespace ServerApi.Controllers
 
 			return CreatedAtRoute("GetProductById", new { id = product_to_create.Id }, productDTO);
 		}
+
+		[HttpDelete("{id}")]
+		public IActionResult DeleteFridgeModel(Guid productId)
+		{
+			var product = _repository.Product.GetProduct(productId, false);
+			if (product == null)
+			{
+				_logger.LogInfo($"Product with id: {productId} doesn't exist in the database.");
+				return NotFound();
+			}
+
+			_repository.Product.DeleteProduct(product);
+			_repository.Save();
+
+			return NoContent();
+		}
 	}
-
-
 }

@@ -25,5 +25,7 @@ namespace Repository
 			FindByCondition(fm => fm.Id.Equals(fridgeModelId), trackChanges).SingleOrDefault();
 
 		public void CreateFridgeModel(FridgeModel fridgeModel) => Create(fridgeModel);
+
+		public void DeleteFridgeModel(FridgeModel fridge) => Delete(fridge);
 	}
 }
