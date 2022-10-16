@@ -78,7 +78,7 @@ namespace ServerApi.Controllers
 			return CreatedAtRoute("FridgeById", new { id = fridgeModelDTO.Id }, fridgeModelDTO);
 		}
 
-		[HttpDelete("{id}")]
+		[HttpDelete("{fridgeModelId}")]
 		public IActionResult DeleteFridgeModel(Guid fridgeModelId)
 		{
 			var fridgeModel = _repository.FridgeModel.GetFridgeModel(fridgeModelId, false);

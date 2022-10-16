@@ -143,7 +143,7 @@ namespace ServerApi.Controllers
 			return CreatedAtRoute("GetFridgeById", new { id = fridge.Id }, fridgeDTO);
 		}
 
-		[HttpDelete("{id}")]
+		[HttpDelete("{fridgeId}")]
 		public IActionResult DeleteFridge(Guid fridgeId)
 		{
 			var fridge = _repository.Fridge.GetFridge(fridgeId, false);
