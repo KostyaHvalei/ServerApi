@@ -5,6 +5,11 @@ using System.Linq;
 using System;
 using Entities.DataTransferObjects;
 using Entities.Models;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using System.IO.Pipes;
 
 namespace ServerApi.Controllers
 {
@@ -15,11 +20,13 @@ namespace ServerApi.Controllers
 	{
 		private readonly IRepositoryManager _repository;
 		private readonly ILoggerManager _logger;
+		private readonly IWebHostEnvironment _environment;
 
-		public ProductsController(IRepositoryManager repository, ILoggerManager logger)
+		public ProductsController(IRepositoryManager repository, ILoggerManager logger, IWebHostEnvironment environment)
 		{
 			_repository = repository;
 			_logger = logger;
+			_environment = environment;
 		}
 
 		[HttpGet]
@@ -84,6 +91,43 @@ namespace ServerApi.Controllers
 			return CreatedAtRoute("GetProductById", new { id = product_to_create.Id }, productDTO);
 		}
 
+		[HttpPost("uploadimage")]
+		public IActionResult UploadProductImage([FromForm] ImageUploadDTO imageDTO)
+		{
+			var prod = _repository.Product.GetProduct(imageDTO.ProductId, false);
+			if(prod == null)
+			{
+				_logger.LogError($"There is no product with this {imageDTO.ProductId}");
+				return BadRequest($"There is no product with this {imageDTO.ProductId}");
+			}
+
+			if(imageDTO.file.Length == 0)
+			{
+				_logger.LogError($"There is no file in request");
+				return BadRequest($"There is no file in request");
+			}
+
+			try
+			{
+				if (!Directory.Exists(Path.Combine(_environment.WebRootPath, "Images")))
+				{
+					Directory.CreateDirectory(Path.Combine(_environment.WebRootPath, "Images"));
+				}
+				using (FileStream fileStream = System.IO.File.Create(Path.Combine(_environment.WebRootPath, "Images", imageDTO.ProductId.ToString().ToLower()
+					+ imageDTO.file.FileName.Substring(imageDTO.file.FileName.LastIndexOf('.')))))
+				{
+					imageDTO.file.CopyTo(fileStream);
+					fileStream.Flush();
+				}
+			}
+			catch (Exception ex)
+			{
+				return NotFound(ex.ToString());
+			}
+
+			return Ok();
+		}
+
 		[HttpPut("{productId}")]
 		public IActionResult UpdateFridge(Guid productId, [FromBody] ProductToUpdateDTO product)
 		{
@@ -127,6 +171,12 @@ namespace ServerApi.Controllers
 			_repository.Save();
 
 			return NoContent();
+		}
+
+		public class ImageUploadDTO
+		{
+			public Guid ProductId { get; set; }
+			public IFormFile file { get; set; }
 		}
 	}
 }

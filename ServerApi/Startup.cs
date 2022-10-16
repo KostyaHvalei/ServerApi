@@ -16,6 +16,7 @@ using ServerApi.Extensions;
 using ServerApi.ActionFilters;
 using Contracts;
 using ServerApi.Implementation;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace ServerApi
 {
@@ -55,6 +56,13 @@ namespace ServerApi
 			services.Configure<ApiBehaviorOptions>(options =>
 			{
 				options.SuppressModelStateInvalidFilter = true;
+			});
+
+			services.Configure<FormOptions>(o =>
+			{
+				o.ValueLengthLimit = int.MaxValue;
+				o.MultipartBodyLengthLimit = int.MaxValue;
+				o.MemoryBufferThreshold = int.MaxValue;
 			});
 		}
 
