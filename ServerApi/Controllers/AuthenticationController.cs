@@ -15,11 +15,13 @@ namespace ServerApi.Controllers
 	{
 		private readonly ILoggerManager _logger;
 		private readonly UserManager<User> _userManager;
+		private readonly IAuthenticationManager _authManager;
 
-		public AuthenticationController(ILoggerManager logger, UserManager<User> userManager)
+		public AuthenticationController(ILoggerManager logger, UserManager<User> userManager, IAuthenticationManager authManager)
 		{
 			_logger = logger;
 			_userManager = userManager;
+			_authManager = authManager;
 		}
 
 		[HttpPost]
@@ -50,5 +52,17 @@ namespace ServerApi.Controllers
 			return StatusCode(201);
 		}
 
+		[HttpPost("login")]
+		[ServiceFilter(typeof(ValidationFilterAttribute))]
+		public async Task<IActionResult> Authenticate([FromBody] UserForAuthenticationDTO user)
+		{
+			if(! await _authManager.ValidateUser(user))
+			{
+				_logger.LogWarn($"{nameof(Authenticate)}: Authentication failed. Wrong user name or password.");
+				return Unauthorized();
+			}
+
+			return Ok(new { Token = await _authManager.CreateToken() });
+		}
 	}
 }

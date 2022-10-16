@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 using System.IO;
 using ServerApi.Extensions;
 using ServerApi.ActionFilters;
+using Contracts;
+using ServerApi.Implementation;
 
 namespace ServerApi
 {
@@ -41,6 +43,7 @@ namespace ServerApi
 			services.ConfigureJWT(Configuration);
 
 			services.AddScoped<ValidationFilterAttribute>();
+			services.AddScoped<IAuthenticationManager, AuthenticationManager>();
 
 			services.ConfigureSwagger();
 			services.AddControllers(config =>
