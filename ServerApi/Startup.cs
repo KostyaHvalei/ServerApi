@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
 using ServerApi.Extensions;
+using ServerApi.ActionFilters;
 
 namespace ServerApi
 {
@@ -34,9 +35,14 @@ namespace ServerApi
 			services.ConfigureLoggerService();
 			services.ConfigureSqlContext(Configuration);
 			services.ConfigureRepositoryManager();
-			services.ConfigureJWT(Configuration);
-			services.ConfigureSwagger();
 
+			services.AddAuthentication();
+			services.ConfigureIdentity();
+			services.ConfigureJWT(Configuration);
+
+			services.AddScoped<ValidationFilterAttribute>();
+
+			services.ConfigureSwagger();
 			services.AddControllers(config =>
 			{
 				config.RespectBrowserAcceptHeader = true;

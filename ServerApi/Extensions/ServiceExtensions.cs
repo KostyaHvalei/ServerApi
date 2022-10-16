@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Entities;
 using Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -13,6 +14,7 @@ using System.Text;
 using System;
 using System.Runtime.CompilerServices;
 using Microsoft.OpenApi.Models;
+using Entities.Models;
 
 namespace ServerApi.Extensions
 {
@@ -88,6 +90,22 @@ namespace ServerApi.Extensions
 					Version = "v1"
 				});
 			});
+		}
+
+		public static void ConfigureIdentity(this IServiceCollection services)
+		{
+			var builder = services.AddIdentityCore<User>(o =>
+			{
+				o.Password.RequireDigit = true;
+				o.Password.RequireLowercase = false;
+				o.Password.RequireUppercase = false;
+				o.Password.RequireNonAlphanumeric = false;
+				o.Password.RequiredLength = 10;
+				o.User.RequireUniqueEmail = true;
+			});
+			builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
+			builder.AddEntityFrameworkStores<RepositoryContext>()
+			.AddDefaultTokenProviders();
 		}
 	}
 }
