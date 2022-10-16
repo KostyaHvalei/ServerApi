@@ -15,6 +15,7 @@ namespace ServerApi.Migrations
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[] { "27485676-f2e3-405e-b3bf-d632ce1d9261", "a076d1cb-76b1-4e38-b456-f8d1b9d99fd4", "Administrator", "ADMINISTRATOR" });
+
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

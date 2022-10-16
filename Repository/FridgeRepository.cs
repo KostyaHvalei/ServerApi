@@ -13,10 +13,12 @@ namespace Repository
 {
 	public class FridgeRepository : RepositoryBase<Fridge>, IFridgeRepository
 	{
+		private readonly RepositoryContext context;
+
 		public FridgeRepository(RepositoryContext repositoryContext)
 			: base(repositoryContext)
 		{
-
+			context = repositoryContext;
 		}
 
 		public IEnumerable<Fridge> GetAllFridges(bool trackChanges) =>
@@ -56,6 +58,11 @@ namespace Repository
 			}
 			
 			Update(fridge);
+		}
+
+		public (Guid firdgeId, Guid productId) GetFridgeProductWithZeroQuantity()
+		{
+			return (Guid.Empty, Guid.Empty);
 		}
 
 		public void DeleteFridge(Fridge fridge) => Delete(fridge);

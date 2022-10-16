@@ -23,9 +23,6 @@ namespace Contracts
 		public void AddProductToFridge(Guid fridgeId, Product product, int quantity);
 		public void DeleteFridge(Fridge fridge);
 
-		public Guid FindZeroQuantityFridgeProduct()
-		{
-			return Guid.Empty;
-		}
+		public (Guid firdgeId, Guid productId) GetFridgeProductWithZeroQuantity();
 	}
 }
