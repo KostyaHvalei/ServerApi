@@ -34,6 +34,8 @@ namespace Entities
 					{
 						fp.HasKey(fp => fp.Id);
 						fp.ToTable("FridgeProducts");
+						fp.HasIndex(fp => new { fp.ProductId, fp.FridgeId })
+						.IsUnique(true);
 					});
 
 			modelBuilder.ApplyConfiguration(new FridgeModelConfiguration());
