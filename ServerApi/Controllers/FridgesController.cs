@@ -211,16 +211,16 @@ namespace ServerApi.Controllers
 			return NoContent();
 		}
 
+		//Error with multi tracking when call from mvc
 		[HttpDelete("{fridgeId}")]
 		public IActionResult DeleteFridge(Guid fridgeId)
 		{
-			var fridge = _repository.Fridge.GetFridge(fridgeId, false);
+			var fridge = _repository.Fridge.GetFridge(fridgeId, true);
 			if (fridge == null)
 			{
 				_logger.LogInfo($"Fridge with id: {fridgeId} doesn't exist in the database.");
 				return NotFound();
 			}
-
 			_repository.Fridge.DeleteFridge(fridge);
 			_repository.Save();
 
