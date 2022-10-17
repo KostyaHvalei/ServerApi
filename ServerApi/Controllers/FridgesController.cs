@@ -66,7 +66,7 @@ namespace ServerApi.Controllers
 					FridgeName = fridge.Name,
 					ModelName = fridge.FridgeModel.Name,
 					OwnerName = fridge.OwnerName,
-					Products = fridge.FridgeProducts.Select(fp => new FridgeProductDTO { ProductId = fp.Id, ProductName = fp.Product.Name, Quantity = fp.Quantity })
+					Products = fridge.FridgeProducts.Select(fp => new FridgeProductDTO { ProductId = fp.ProductId, ProductName = fp.Product.Name, Quantity = fp.Quantity })
 				};
 				return Ok(fridgeDTO);
 			}
@@ -80,7 +80,7 @@ namespace ServerApi.Controllers
 			(var prodId, var fridId) = _repository.Fridge.GetFridgeProductWithZeroQuantity();
 
 
-			while(prodId != Guid.Empty && fridId != Guid.Empty)
+			if(prodId != Guid.Empty && fridId != Guid.Empty)
 			{
 				int? def_quant = _repository.Product.GetDefaultQuantity(prodId);
 
@@ -90,10 +90,10 @@ namespace ServerApi.Controllers
 					AddProductToFridge(fridId, new ProductToAddInFridgeDTO { ProductId = prodId, Quantity = (int)def_quant });
 					count++;
 				}
-				(prodId, fridId) = _repository.Fridge.GetFridgeProductWithZeroQuantity();
+				//(prodId, fridId) = _repository.Fridge.GetFridgeProductWithZeroQuantity();
 			}
 
-			return Ok($"{count} objects updated");
+			return Content($"{count} objects updated");
 		}
 
 		[HttpPost]
@@ -153,7 +153,7 @@ namespace ServerApi.Controllers
 
 			int quantity = productDTO.Quantity;
 
-			var product = _repository.Product.FindByCondition(p => p.Id == productDTO.ProductId, false).FirstOrDefault();
+			var product = _repository.Product.FindByCondition(p => p.Id == productDTO.ProductId, true).FirstOrDefault();
 			if(product == null)
 			{
 				_logger.LogError("There is no product with this id.");

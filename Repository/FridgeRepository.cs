@@ -37,7 +37,7 @@ namespace Repository
 		public void AddProductToFridge(Guid fridgeId, Product product, int quantity)
 		{
 			//Maybe trackChanges
-			var fridge = FindByCondition(f => f.Id == fridgeId, false).Include(f => f.FridgeProducts).ThenInclude(fp => fp.Product).FirstOrDefault();
+			var fridge = FindByCondition(f => f.Id == fridgeId, true).Include(f => f.FridgeProducts).ThenInclude(fp => fp.Product).FirstOrDefault();
 
 			var fp = fridge.FridgeProducts.Find(fp => fp.FridgeId == fridge.Id && fp.ProductId == product.Id);
 
@@ -47,12 +47,14 @@ namespace Repository
 				{
 					fp.Quantity += quantity;
 					Update(fridge);
+					context.SaveChanges();
 				}
 				else
 				{
 					fridge.Products.Remove(product);
 					fridge.FridgeProducts.Remove(fp);
 					Update(fridge);
+					context.SaveChanges();
 				}
 			}
 			else
@@ -61,6 +63,7 @@ namespace Repository
 				fridge.Products.Add(product);
 				fridge.FridgeProducts.Add(frigeProduct);
 				Update(fridge);
+				context.SaveChanges();
 			}
 		}
 
