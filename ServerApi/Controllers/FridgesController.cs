@@ -80,7 +80,7 @@ namespace ServerApi.Controllers
 			(var prodId, var fridId) = _repository.Fridge.GetFridgeProductWithZeroQuantity();
 
 
-			if(prodId != Guid.Empty && fridId != Guid.Empty)
+			while(prodId != Guid.Empty && fridId != Guid.Empty)
 			{
 				int? def_quant = _repository.Product.GetDefaultQuantity(prodId);
 
@@ -90,7 +90,7 @@ namespace ServerApi.Controllers
 					AddProductToFridge(fridId, new ProductToAddInFridgeDTO { ProductId = prodId, Quantity = (int)def_quant });
 					count++;
 				}
-				//(prodId, fridId) = _repository.Fridge.GetFridgeProductWithZeroQuantity();
+				(prodId, fridId) = _repository.Fridge.GetFridgeProductWithZeroQuantity();
 			}
 
 			return Content($"{count} objects updated");
