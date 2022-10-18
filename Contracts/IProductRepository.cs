@@ -10,12 +10,6 @@ namespace Contracts
 {
 	public interface IProductRepository
 	{
-		IQueryable<Product> FindAll(bool trackChanges);
-		IQueryable<Product> FindByCondition(Expression<Func<Product, bool>> expression, bool trackChanges);
-		void Create(Product entity);
-		void Update(Product entity);
-		void Delete(Product entity);
-
 		IEnumerable<Product> GetAllProducts(bool trackChanges);
 		public Product GetProduct(Guid productId, bool trackChanges);
 		public int? GetDefaultQuantity(Guid prodId);

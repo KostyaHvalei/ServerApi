@@ -77,7 +77,7 @@ namespace ServerApi.Controllers
 			}
 
 			FridgeModel fridge = new FridgeModel { Name = fridgeModel.Name, Year = fridgeModel.Year };
-			_repository.FridgeModel.Create(fridge);
+			_repository.FridgeModel.CreateFridgeModel(fridge);
 			_repository.Save();
 
 			var fridgeModelDTO = new FridgeModelDTO { Id = fridge.Id, Name= fridge.Name, Year = fridge.Year };

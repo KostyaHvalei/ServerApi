@@ -105,7 +105,7 @@ namespace ServerApi.Controllers
 				return BadRequest("FridgeModelToCreationDTO object in null");
 			}
 
-			var fridgeModel = _repository.FridgeModel.FindByCondition(model => model.Id == fridge.FridgeModelId, false).FirstOrDefault();
+			var fridgeModel = _repository.FridgeModel.GetFridgeModel(fridge.FridgeModelId, false);
 
 			if (fridgeModel == null)
 			{
@@ -120,7 +120,7 @@ namespace ServerApi.Controllers
 			}
 
 			Fridge fridge_to_create = new Fridge { Name = fridge.Name, OwnerName = fridge.OwnerName, FridgeModelId = fridge.FridgeModelId };
-			_repository.Fridge.Create(fridge_to_create);
+			_repository.Fridge.CreateFridge(fridge_to_create);
 			_repository.Save();
 
 			var fridgeDTO = new FridgeDTO { Id = fridge_to_create.Id, Name = fridge_to_create.Name, OwnerName = fridge_to_create.OwnerName, ModelName = fridgeModel.Name };
@@ -152,7 +152,8 @@ namespace ServerApi.Controllers
 
 			int quantity = productDTO.Quantity;
 
-			var product = _repository.Product.FindByCondition(p => p.Id == productDTO.ProductId, true).FirstOrDefault();
+			var product = _repository.Product.GetProduct(productDTO.ProductId, true);
+
 			if(product == null)
 			{
 				_logger.LogError("There is no product with this id.");

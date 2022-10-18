@@ -83,7 +83,7 @@ namespace ServerApi.Controllers
 			}
 
 			Product product_to_create = new Product { Name = product.Name, DefaultQuantity = product.DefaultQuantity };
-			_repository.Product.Create(product_to_create);
+			_repository.Product.CreateProduct(product_to_create);
 			_repository.Save();
 
 			var productDTO = new ProductDTO { Id = product_to_create.Id, Name = product_to_create.Name, DefaultQuantity = product_to_create.DefaultQuantity };
