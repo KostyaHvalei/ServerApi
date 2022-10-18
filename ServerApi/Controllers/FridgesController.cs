@@ -133,8 +133,7 @@ namespace ServerApi.Controllers
 		 * If there is no such product in the fridge - add product
 		 * If there is - change quantity
 		 * Quantity can be negative - this reduses the quantity
-		 * if quanity is null or less product will be deleted from fridge!!!!!FFFFFIIIIIXXXXX it
-		 * Temp fix it to set quantity to 0
+		 * if quanity is null or less product will be deleted from fridge
 		 */
 		[HttpPost("{fridgeId}")]
 		public IActionResult AddProductToFridge(Guid fridgeId, [FromBody] ProductToAddInFridgeDTO productDTO)

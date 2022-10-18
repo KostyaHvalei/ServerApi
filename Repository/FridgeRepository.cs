@@ -43,7 +43,7 @@ namespace Repository
 
 			if (fp != null)
 			{
-				if(fp.Quantity + quantity >= 0)
+				if(fp.Quantity + quantity > 0)
 				{
 					fp.Quantity += quantity;
 					Update(fridge);
@@ -52,7 +52,6 @@ namespace Repository
 				else
 				{
 					fridge.Products.Remove(product);
-					fridge.FridgeProducts.Remove(fp);
 					Update(fridge);
 					context.SaveChanges();
 				}
@@ -60,7 +59,6 @@ namespace Repository
 			else
 			{
 				var frigeProduct = new FridgeProduct { Fridge = fridge, FridgeId = fridge.Id, Product = product, ProductId = product.Id, Quantity = quantity };
-				fridge.Products.Add(product);
 				fridge.FridgeProducts.Add(frigeProduct);
 				Update(fridge);
 				context.SaveChanges();
