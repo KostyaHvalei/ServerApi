@@ -49,11 +49,15 @@ namespace Repository
 					Update(fridge);
 					context.SaveChanges();
 				}
-				else
+				else if(fp.Quantity + quantity == 0)
 				{
 					fridge.Products.Remove(product);
 					Update(fridge);
 					context.SaveChanges();
+				}
+				else
+				{
+					throw new ArgumentException("Quantity can't be less then zero");
 				}
 			}
 			else
@@ -63,6 +67,20 @@ namespace Repository
 				Update(fridge);
 				context.SaveChanges();
 			}
+		}
+
+		public void RemoveProductFromFridge(Guid fridgeId, Guid productId)
+		{
+			var fridge = FindByCondition(f => f.Id == fridgeId, true).Include(f => f.FridgeProducts).ThenInclude(fp => fp.Product).FirstOrDefault();
+			if (fridge == null)
+				throw new ArgumentException($"There is no fridge with this id {fridgeId}");
+
+			var product = fridge.Products.FirstOrDefault(p => p.Id == productId);
+			if(product == null)
+				throw new ArgumentException($"There is no product in this fridge with this id {productId}");
+
+			fridge.Products.Remove(product);
+			context.SaveChanges();
 		}
 
 		public (Guid firdgeId, Guid productId) GetFridgeProductWithZeroQuantity()

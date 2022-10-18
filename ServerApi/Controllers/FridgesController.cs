@@ -133,7 +133,7 @@ namespace ServerApi.Controllers
 		 * If there is no such product in the fridge - add product
 		 * If there is - change quantity
 		 * Quantity can be negative - this reduses the quantity
-		 * if quanity is zero or less product will be deleted from fridge
+		 * if quanity is zero product will be deleted from fridge
 		 */
 		[HttpPost("{fridgeId}")]
 		public IActionResult AddProductToFridge(Guid fridgeId, [FromBody] ProductToAddInFridgeDTO productDTO)
@@ -167,8 +167,15 @@ namespace ServerApi.Controllers
 				return BadRequest("There is no fridge with this id");
 			}
 
-			_repository.Fridge.AddProductToFridge(fridgeId, product, quantity);
-			_repository.Save();
+			try
+			{
+				_repository.Fridge.AddProductToFridge(fridgeId, product, quantity);
+				_repository.Save();
+			}
+			catch(Exception ex)
+			{
+				return BadRequest(ex.Message.ToString());
+			}
 
 			var fridgeDTO = new FridgeProductsDTO
 			{
@@ -180,6 +187,21 @@ namespace ServerApi.Controllers
 			};
 
 			return CreatedAtRoute("GetFridgeById", new { id = fridge.Id }, fridgeDTO);
+		}
+
+		[HttpDelete("{fridgeId}/{productId}")]
+		public IActionResult RemoveProductFromFridge(Guid fridgeId, Guid productId)
+		{
+			try
+			{
+				_repository.Fridge.RemoveProductFromFridge(fridgeId, productId);
+			}
+			catch(Exception ex)
+			{
+				return BadRequest(ex.Message.ToString());
+			}
+
+			return NoContent();
 		}
 
 		[HttpPut("{fridgeId}")]

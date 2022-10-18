@@ -15,6 +15,7 @@ namespace Contracts
 		public Fridge GetFridge(Guid Id, bool trackChanges);
 		public void CreateFridge(Fridge entity);
 		public void AddProductToFridge(Guid fridgeId, Product product, int quantity);
+		public void RemoveProductFromFridge(Guid fridgeId, Guid productId);
 		public void DeleteFridge(Fridge fridge);
 
 		public (Guid firdgeId, Guid productId) GetFridgeProductWithZeroQuantity();
