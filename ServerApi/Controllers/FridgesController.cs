@@ -72,7 +72,6 @@ namespace ServerApi.Controllers
 			}
 		}
 
-		//TODO: error with multi tracking of Poducts
 		[HttpGet("[action]")]
 		public IActionResult UpdateFrigdeProducts()
 		{
