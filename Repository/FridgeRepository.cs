@@ -101,8 +101,9 @@ namespace Repository
 					throw new ArgumentException("Quantity can't be less then zero");
 				}
 			}
-			else
+			else if(quantity > 0)
 			{
+				
 				var frigeProduct = new FridgeProduct { Fridge = fridge, FridgeId = fridge.Id, Product = product, ProductId = product.Id, Quantity = quantity };
 				fridge.FridgeProducts.Add(frigeProduct);
 				Update(fridge);
