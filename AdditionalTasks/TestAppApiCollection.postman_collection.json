@@ -346,6 +346,27 @@
 			"response": []
 		},
 		{
+			"name": "DeleteProductFromFridge",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:44395/api/fridges/",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44395",
+					"path": [
+						"api",
+						"fridges",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Update Product",
 			"request": {
 				"method": "PUT",
