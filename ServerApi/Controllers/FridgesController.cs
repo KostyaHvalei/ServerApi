@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Entities.Models;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using Entities;
+using System.Threading.Tasks;
 
 namespace ServerApi.Controllers
 {
@@ -26,11 +27,11 @@ namespace ServerApi.Controllers
 		}
 
 		[HttpGet]
-		public IActionResult GetFridges()
+		public async Task<IActionResult> GetFridges()
 		{
 			try
 			{
-				var fridges = _repository.Fridge.GetAllFridges(false);
+				var fridges = await _repository.Fridge.GetAllFridgesAsync(false);
 
 				var fridgesDTO = fridges.Select(f => new FridgeDTO
 				{
@@ -50,9 +51,9 @@ namespace ServerApi.Controllers
 		}
 
 		[HttpGet("{id}", Name = "GetFridgeById")]
-		public IActionResult GetFrige(Guid id)
+		public async Task<IActionResult> GetFrige(Guid id)
 		{
-			var fridge = _repository.Fridge.GetFridge(id, false);
+			var fridge = await _repository.Fridge.GetFridgeAsync(id, false);
 			if (fridge == null)
 			{
 				_logger.LogInfo($"Fridge with id {id} doesn't exists");
@@ -73,10 +74,10 @@ namespace ServerApi.Controllers
 		}
 
 		[HttpGet("[action]")]
-		public IActionResult UpdateFrigdeProducts()
+		public async Task<IActionResult> UpdateFrigdeProducts()
 		{
 			int count = 0;
-			(var prodId, var fridId) = _repository.Fridge.GetFridgeProductWithZeroQuantity();
+			(var prodId, var fridId) = await _repository.Fridge.GetFridgeProductWithZeroQuantityAsync();
 
 
 			while(prodId != Guid.Empty && fridId != Guid.Empty)
@@ -86,17 +87,17 @@ namespace ServerApi.Controllers
 				_repository.Save();
 				if (def_quant != null && def_quant != 0)
 				{
-					AddProductToFridge(fridId, new ProductToAddInFridgeDTO { ProductId = prodId, Quantity = (int)def_quant });
+					await AddProductToFridge(fridId, new ProductToAddInFridgeDTO { ProductId = prodId, Quantity = (int)def_quant });
 					count++;
 				}
-				(prodId, fridId) = _repository.Fridge.GetFridgeProductWithZeroQuantity();
+				(prodId, fridId) = await _repository.Fridge.GetFridgeProductWithZeroQuantityAsync();
 			}
 
 			return Content($"{count} objects updated");
 		}
 
 		[HttpPost]
-		public IActionResult CreateFridge([FromBody] FridgeToCreationDTO fridge)
+		public async Task<IActionResult> CreateFridge([FromBody] FridgeToCreationDTO fridge)
 		{
 			if (fridge == null)
 			{
@@ -104,7 +105,7 @@ namespace ServerApi.Controllers
 				return BadRequest("FridgeModelToCreationDTO object in null");
 			}
 
-			var fridgeModel = _repository.FridgeModel.GetFridgeModel(fridge.FridgeModelId, false);
+			var fridgeModel = await _repository.FridgeModel.GetFridgeModelAsync(fridge.FridgeModelId, false);
 
 			if (fridgeModel == null)
 			{
@@ -120,7 +121,7 @@ namespace ServerApi.Controllers
 
 			Fridge fridge_to_create = new Fridge { Name = fridge.Name, OwnerName = fridge.OwnerName, FridgeModelId = fridge.FridgeModelId };
 			_repository.Fridge.CreateFridge(fridge_to_create);
-			_repository.Save();
+			await _repository.SaveAsync();
 
 			var fridgeDTO = new FridgeDTO { Id = fridge_to_create.Id, Name = fridge_to_create.Name, OwnerName = fridge_to_create.OwnerName, ModelName = fridgeModel.Name };
 
@@ -135,7 +136,7 @@ namespace ServerApi.Controllers
 		 * if quanity is zero product will be deleted from fridge
 		 */
 		[HttpPost("{fridgeId}")]
-		public IActionResult AddProductToFridge(Guid fridgeId, [FromBody] ProductToAddInFridgeDTO productDTO)
+		public async Task<IActionResult> AddProductToFridge(Guid fridgeId, [FromBody] ProductToAddInFridgeDTO productDTO)
 		{
 			if(productDTO == null)
 			{
@@ -151,7 +152,7 @@ namespace ServerApi.Controllers
 
 			int quantity = productDTO.Quantity;
 
-			var product = _repository.Product.GetProduct(productDTO.ProductId, true);
+			var product = await _repository.Product.GetProductAsync(productDTO.ProductId, true);
 
 			if(product == null)
 			{
@@ -159,7 +160,7 @@ namespace ServerApi.Controllers
 				return BadRequest("There is no product with this id");
 			}
 			
-			var fridge = _repository.Fridge.GetFridge(fridgeId, false);
+			var fridge = await _repository.Fridge.GetFridgeAsync(fridgeId, false);
 			if (fridge == null)
 			{
 				_logger.LogError("There is no fridge with this id.");
@@ -168,8 +169,8 @@ namespace ServerApi.Controllers
 
 			try
 			{
-				_repository.Fridge.AddProductToFridge(fridgeId, product, quantity);
-				_repository.Save();
+				await _repository.Fridge.AddProductToFridgeAsync(fridgeId, product, quantity);
+				await _repository.SaveAsync();
 			}
 			catch(Exception ex)
 			{
@@ -189,11 +190,11 @@ namespace ServerApi.Controllers
 		}
 
 		[HttpDelete("{fridgeId}/{productId}")]
-		public IActionResult RemoveProductFromFridge(Guid fridgeId, Guid productId)
+		public async Task<IActionResult> RemoveProductFromFridge(Guid fridgeId, Guid productId)
 		{
 			try
 			{
-				_repository.Fridge.RemoveProductFromFridge(fridgeId, productId);
+				await _repository.Fridge.RemoveProductFromFridgeAsync(fridgeId, productId);
 			}
 			catch(Exception ex)
 			{
@@ -204,7 +205,7 @@ namespace ServerApi.Controllers
 		}
 
 		[HttpPut("{fridgeId}")]
-		public IActionResult UpdateFridge(Guid fridgeId, [FromBody] FridgeToUpdateDTO fridge)
+		public async Task<IActionResult> UpdateFridge(Guid fridgeId, [FromBody] FridgeToUpdateDTO fridge)
 		{
 			if (fridge == null)
 			{
@@ -218,7 +219,7 @@ namespace ServerApi.Controllers
 				return UnprocessableEntity(ModelState);
 			}
 
-			var _fridge = _repository.Fridge.GetFridge(fridgeId, true);
+			var _fridge = await _repository.Fridge.GetFridgeAsync(fridgeId, true);
 			if (_fridge == null)
 			{
 				_logger.LogInfo($"Fridge with id: {fridgeId} doesn't exist in the database.");
@@ -227,23 +228,23 @@ namespace ServerApi.Controllers
 
 			_fridge.Name = fridge.Name;
 			_fridge.OwnerName = fridge.OwnerName;
-			_repository.Save();
+			await _repository.SaveAsync();
 
 			return NoContent();
 		}
 
 		//Error with multi tracking when call from mvc
 		[HttpDelete("{fridgeId}")]
-		public IActionResult DeleteFridge(Guid fridgeId)
+		public async Task<IActionResult> DeleteFridge(Guid fridgeId)
 		{
-			var fridge = _repository.Fridge.GetFridge(fridgeId, true);
+			var fridge = await _repository.Fridge.GetFridgeAsync(fridgeId, true);
 			if (fridge == null)
 			{
 				_logger.LogInfo($"Fridge with id: {fridgeId} doesn't exist in the database.");
 				return NotFound();
 			}
 			_repository.Fridge.DeleteFridge(fridge);
-			_repository.Save();
+			await _repository.SaveAsync();
 
 			return NoContent();
 		}

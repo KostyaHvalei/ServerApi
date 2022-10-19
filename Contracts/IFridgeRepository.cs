@@ -13,11 +13,19 @@ namespace Contracts
 	{
 		IEnumerable<Fridge> GetAllFridges(bool trackChanges);
 		public Fridge GetFridge(Guid Id, bool trackChanges);
-		public void CreateFridge(Fridge entity);
 		public void AddProductToFridge(Guid fridgeId, Product product, int quantity);
 		public void RemoveProductFromFridge(Guid fridgeId, Guid productId);
-		public void DeleteFridge(Fridge fridge);
 
 		public (Guid firdgeId, Guid productId) GetFridgeProductWithZeroQuantity();
+
+		Task<IEnumerable<Fridge>> GetAllFridgesAsync(bool trackChanges);
+		Task<Fridge> GetFridgeAsync(Guid Id, bool trackChanges);
+		Task AddProductToFridgeAsync(Guid fridgeId, Product product, int quantity);
+		Task RemoveProductFromFridgeAsync(Guid fridgeId, Guid productId);
+
+		Task<(Guid firdgeId, Guid productId)> GetFridgeProductWithZeroQuantityAsync();
+
+		public void CreateFridge(Fridge entity);
+		public void DeleteFridge(Fridge fridge);
 	}
 }
