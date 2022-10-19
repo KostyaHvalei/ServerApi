@@ -172,11 +172,5 @@ namespace ServerApi.Controllers
 
 			return NoContent();
 		}
-
-		public class ImageUploadDTO
-		{
-			public Guid ProductId { get; set; }
-			public IFormFile file { get; set; }
-		}
 	}
 }
