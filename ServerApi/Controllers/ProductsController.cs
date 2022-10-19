@@ -30,11 +30,11 @@ namespace ServerApi.Controllers
 		}
 
 		[HttpGet]
-		public IActionResult GetProducts()
+		public async Task<IActionResult> GetProducts()
 		{
 			try
 			{
-				var products = _repository.Product.GetAllProducts(false);
+				var products = await _repository.Product.GetAllProductsAsync(false);
 				var productsDTO = products.Select(p => new ProductDTO
 				{
 					Id = p.Id,
@@ -52,9 +52,9 @@ namespace ServerApi.Controllers
 		}
 
 		[HttpGet("{id}", Name = "GetProductById")]
-		public IActionResult GetProduct(Guid id)
+		public async Task<IActionResult> GetProduct(Guid id)
 		{
-			var product = _repository.Product.GetProduct(id, false);
+			var product = await _repository.Product.GetProductAsync(id, false);
 			if (product == null)
 			{
 				_logger.LogInfo($"Product with id {id} doesn't exists");
@@ -68,7 +68,7 @@ namespace ServerApi.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult CreateProduct([FromBody] ProductToCreationDTO product)
+		public async Task<IActionResult> CreateProduct([FromBody] ProductToCreationDTO product)
 		{
 			if (product == null)
 			{
@@ -84,7 +84,7 @@ namespace ServerApi.Controllers
 
 			Product product_to_create = new Product { Name = product.Name, DefaultQuantity = product.DefaultQuantity };
 			_repository.Product.CreateProduct(product_to_create);
-			_repository.Save();
+			await _repository.SaveAsync();
 
 			var productDTO = new ProductDTO { Id = product_to_create.Id, Name = product_to_create.Name, DefaultQuantity = product_to_create.DefaultQuantity };
 
@@ -92,9 +92,9 @@ namespace ServerApi.Controllers
 		}
 
 		[HttpPost("uploadimage")]
-		public IActionResult UploadProductImage([FromForm] ImageUploadDTO imageDTO)
+		public async Task<IActionResult> UploadProductImage([FromForm] ImageUploadDTO imageDTO)
 		{
-			var prod = _repository.Product.GetProduct(imageDTO.ProductId, false);
+			var prod = await _repository.Product.GetProductAsync(imageDTO.ProductId, false);
 			if(prod == null)
 			{
 				_logger.LogError($"There is no product with this {imageDTO.ProductId}");
@@ -129,7 +129,7 @@ namespace ServerApi.Controllers
 		}
 
 		[HttpPut("{productId}")]
-		public IActionResult UpdateFridge(Guid productId, [FromBody] ProductToUpdateDTO product)
+		public async Task<IActionResult> UpdateFridge(Guid productId, [FromBody] ProductToUpdateDTO product)
 		{
 			if (product == null)
 			{
@@ -143,7 +143,7 @@ namespace ServerApi.Controllers
 				return UnprocessableEntity(ModelState);
 			}
 
-			var _product = _repository.Product.GetProduct(productId, true);
+			var _product = await _repository.Product.GetProductAsync(productId, true);
 			if (_product == null)
 			{
 				_logger.LogInfo($"Product with id: {productId} doesn't exist in the database.");
@@ -152,15 +152,15 @@ namespace ServerApi.Controllers
 
 			_product.Name = product.Name;
 			_product.DefaultQuantity = product.DefaultQuantity;
-			_repository.Save();
+			await _repository.SaveAsync();
 
 			return NoContent();
 		}
 
 		[HttpDelete("{productId}")]
-		public IActionResult DeleteFridgeModel(Guid productId)
+		public async Task<IActionResult> DeleteFridgeModel(Guid productId)
 		{
-			var product = _repository.Product.GetProduct(productId, false);
+			var product = await _repository.Product.GetProductAsync(productId, false);
 			if (product == null)
 			{
 				_logger.LogInfo($"Product with id: {productId} doesn't exist in the database.");
