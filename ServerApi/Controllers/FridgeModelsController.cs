@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ServerApi.Controllers
 {
@@ -23,11 +24,11 @@ namespace ServerApi.Controllers
 		}
 
 		[HttpGet]
-		public IActionResult GetFridgeModels()
+		public async Task<IActionResult> GetFridgeModels()
 		{
 			try
 			{
-				var fridgemodels = _repository.FridgeModel.GetAllFridgeModels(false);
+				var fridgemodels = await _repository.FridgeModel.GetAllFridgeModelsAsync(false);
 				var fridgemodelsDTO = fridgemodels.Select(fm => new FridgeModelDTO
 				{
 					Id = fm.Id,
@@ -45,9 +46,9 @@ namespace ServerApi.Controllers
 		}
 
 		[HttpGet("{id}", Name = "FridgeById")]
-		public IActionResult GetFrigeModel(Guid id)
+		public async Task<IActionResult> GetFrigeModel(Guid id)
 		{
-			var fridgemodel = _repository.FridgeModel.GetFridgeModel(id, false);
+			var fridgemodel = await _repository.FridgeModel.GetFridgeModelAsync(id, false);
 
 			if(fridgemodel == null)
 			{
@@ -62,7 +63,7 @@ namespace ServerApi.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult CreateFridgeModel([FromBody]FridgeModelToCreationDTO fridgeModel)
+		public async Task<IActionResult> CreateFridgeModel([FromBody]FridgeModelToCreationDTO fridgeModel)
 		{
 			if(fridgeModel == null)
 			{
@@ -78,7 +79,7 @@ namespace ServerApi.Controllers
 
 			FridgeModel fridge = new FridgeModel { Name = fridgeModel.Name, Year = fridgeModel.Year };
 			_repository.FridgeModel.CreateFridgeModel(fridge);
-			_repository.Save();
+			await _repository.SaveAsync();
 
 			var fridgeModelDTO = new FridgeModelDTO { Id = fridge.Id, Name= fridge.Name, Year = fridge.Year };
 
@@ -86,7 +87,7 @@ namespace ServerApi.Controllers
 		}
 
 		[HttpPut("{fridgeModelId}")]
-		public IActionResult UpdateFridgeModel(Guid fridgeModelId, [FromBody] FridgeModelToUpdateDTO fridgeModel)
+		public async Task<IActionResult> UpdateFridgeModel(Guid fridgeModelId, [FromBody] FridgeModelToUpdateDTO fridgeModel)
 		{
 			if(fridgeModel == null)
 			{
@@ -100,7 +101,7 @@ namespace ServerApi.Controllers
 				return UnprocessableEntity(ModelState);
 			}
 
-			var fm = _repository.FridgeModel.GetFridgeModel(fridgeModelId, true);
+			var fm = await _repository.FridgeModel.GetFridgeModelAsync(fridgeModelId, true);
 			if (fm == null)
 			{
 				_logger.LogInfo($"Fridge with id: {fridgeModelId} doesn't exist in the database.");
@@ -109,15 +110,15 @@ namespace ServerApi.Controllers
 
 			fm.Name = fridgeModel.Name;
 			fm.Year = fridgeModel.Year;
-			_repository.Save();
+			await _repository.SaveAsync();
 
 			return NoContent();
 		}
 
 		[HttpDelete("{fridgeModelId}")]
-		public IActionResult DeleteFridgeModel(Guid fridgeModelId)
+		public async Task<IActionResult> DeleteFridgeModel(Guid fridgeModelId)
 		{
-			var fridgeModel = _repository.FridgeModel.GetFridgeModel(fridgeModelId, false);
+			var fridgeModel = await _repository.FridgeModel.GetFridgeModelAsync(fridgeModelId, false);
 			if(fridgeModel == null)
 			{
 				_logger.LogInfo($"Fridge with id: {fridgeModelId} doesn't exist in the database.");
@@ -125,7 +126,7 @@ namespace ServerApi.Controllers
 			}
 
 			_repository.FridgeModel.DeleteFridgeModel(fridgeModel);
-			_repository.Save();
+			await _repository.SaveAsync();
 
 			return NoContent();
 		}
