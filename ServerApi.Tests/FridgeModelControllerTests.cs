@@ -24,10 +24,11 @@ namespace ServerApi.Tests
 			var controller = new FridgeModelsController(repositoryMock.Object, loggerMock.Object);
 
 			var result = await controller.GetFridgeModels();
-
-			Assert.IsType<OkObjectResult>(result);
 			var objectResult = result as OkObjectResult;
 			var list = objectResult.Value as IEnumerable<FridgeModelDTO>;
+
+
+			Assert.IsType<OkObjectResult>(result);
 			Assert.True(list.Count() == expected.Count());
 		}
 

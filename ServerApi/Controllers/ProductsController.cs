@@ -129,7 +129,7 @@ namespace ServerApi.Controllers
 		}
 
 		[HttpPut("{productId}")]
-		public async Task<IActionResult> UpdateFridge(Guid productId, [FromBody] ProductToUpdateDTO product)
+		public async Task<IActionResult> UpdateProduct(Guid productId, [FromBody] ProductToUpdateDTO product)
 		{
 			if (product == null)
 			{
@@ -158,7 +158,7 @@ namespace ServerApi.Controllers
 		}
 
 		[HttpDelete("{productId}")]
-		public async Task<IActionResult> DeleteFridgeModel(Guid productId)
+		public async Task<IActionResult> DeleteProduct(Guid productId)
 		{
 			var product = await _repository.Product.GetProductAsync(productId, false);
 			if (product == null)
