@@ -24,7 +24,7 @@ namespace ServerApi.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> GetFridgeModels()
+		public async Task<ActionResult> GetFridgeModels()
 		{
 			try
 			{
@@ -46,7 +46,7 @@ namespace ServerApi.Controllers
 		}
 
 		[HttpGet("{id}", Name = "FridgeById")]
-		public async Task<IActionResult> GetFrigeModel(Guid id)
+		public async Task<ActionResult> GetFrigeModel(Guid id)
 		{
 			var fridgemodel = await _repository.FridgeModel.GetFridgeModelAsync(id, false);
 
@@ -63,7 +63,7 @@ namespace ServerApi.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> CreateFridgeModel([FromBody]FridgeModelToCreationDTO fridgeModel)
+		public async Task<ActionResult> CreateFridgeModel([FromBody]FridgeModelToCreationDTO fridgeModel)
 		{
 			if(fridgeModel == null)
 			{
@@ -87,7 +87,7 @@ namespace ServerApi.Controllers
 		}
 
 		[HttpPut("{fridgeModelId}")]
-		public async Task<IActionResult> UpdateFridgeModel(Guid fridgeModelId, [FromBody] FridgeModelToUpdateDTO fridgeModel)
+		public async Task<ActionResult> UpdateFridgeModel(Guid fridgeModelId, [FromBody] FridgeModelToUpdateDTO fridgeModel)
 		{
 			if(fridgeModel == null)
 			{
@@ -116,7 +116,7 @@ namespace ServerApi.Controllers
 		}
 
 		[HttpDelete("{fridgeModelId}")]
-		public async Task<IActionResult> DeleteFridgeModel(Guid fridgeModelId)
+		public async Task<ActionResult> DeleteFridgeModel(Guid fridgeModelId)
 		{
 			var fridgeModel = await _repository.FridgeModel.GetFridgeModelAsync(fridgeModelId, false);
 			if(fridgeModel == null)
