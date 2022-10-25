@@ -87,7 +87,7 @@ namespace ServerApi
 			app.UseSwagger();
 			app.UseSwaggerUI(s =>
 			{
-				s.SwaggerEndpoint("/swagger/v1/swagger.json", "Code Maze API v1");
+				s.SwaggerEndpoint("/swagger/v1/swagger.json", "Test Task Api v1");
 			});
 
 			app.UseRouting();

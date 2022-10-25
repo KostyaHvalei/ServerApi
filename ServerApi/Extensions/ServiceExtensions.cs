@@ -86,7 +86,7 @@ namespace ServerApi.Extensions
 			{
 				s.SwaggerDoc("v1", new OpenApiInfo
 				{
-					Title = "Code Maze API",
+					Title = "Test Task Api",
 					Version = "v1"
 				});
 			});
