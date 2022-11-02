@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ServerApi.ActionFilters;
+using System;
 using System.Threading.Tasks;
 
 namespace ServerApi.Controllers
@@ -47,7 +48,14 @@ namespace ServerApi.Controllers
 				return BadRequest(ModelState);
 			}
 
-			await _userManager.AddToRolesAsync(user, userForRegistration.Roles);
+			try
+			{
+				await _userManager.AddToRolesAsync(user, userForRegistration.Roles);
+			}
+			catch(InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 
 			return StatusCode(201);
 		}
