@@ -57,7 +57,12 @@ namespace ServerApi.Controllers
 			}
 			else
 			{
-				var fridgemodelDTO = new FridgeModelDTO { Id = fridgemodel.Id, Name = fridgemodel.Name, Year = fridgemodel.Year };
+				var fridgemodelDTO = new FridgeModelDTO 
+				{ 
+					Id = fridgemodel.Id,
+					Name = fridgemodel.Name,
+					Year = fridgemodel.Year 
+				};
 				return Ok(fridgemodelDTO);
 			}
 		}

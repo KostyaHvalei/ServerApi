@@ -51,7 +51,10 @@ namespace Repository
 		public void AddProductToFridge(Guid fridgeId, Product product, int quantity)
 		{
 			//Maybe trackChanges
-			var fridge = FindByCondition(f => f.Id == fridgeId, true).Include(f => f.FridgeProducts).ThenInclude(fp => fp.Product).FirstOrDefault();
+			var fridge = FindByCondition(f => f.Id == fridgeId, true)
+				.Include(f => f.FridgeProducts)
+				.ThenInclude(fp => fp.Product)
+				.FirstOrDefault();
 
 			var fp = fridge.FridgeProducts.Find(fp => fp.FridgeId == fridge.Id && fp.ProductId == product.Id);
 
@@ -76,7 +79,14 @@ namespace Repository
 			}
 			else
 			{
-				var frigeProduct = new FridgeProduct { Fridge = fridge, FridgeId = fridge.Id, Product = product, ProductId = product.Id, Quantity = quantity };
+				var frigeProduct = new FridgeProduct
+				{ 
+					Fridge = fridge,
+					FridgeId = fridge.Id,
+					Product = product,
+					ProductId = product.Id,
+					Quantity = quantity 
+				};
 				fridge.FridgeProducts.Add(frigeProduct);
 				Update(fridge);
 				context.SaveChanges();
@@ -85,7 +95,10 @@ namespace Repository
 
 		public async Task AddProductToFridgeAsync(Guid fridgeId, Product product, int quantity)
 		{
-			var fridge = await FindByCondition(f => f.Id == fridgeId, true).Include(f => f.FridgeProducts).ThenInclude(fp => fp.Product).FirstOrDefaultAsync();
+			var fridge = await FindByCondition(f => f.Id == fridgeId, true)
+				.Include(f => f.FridgeProducts)
+				.ThenInclude(fp => fp.Product)
+				.FirstOrDefaultAsync();
 
 			var fp = fridge.FridgeProducts.Find(fp => fp.FridgeId == fridge.Id && fp.ProductId == product.Id);
 
@@ -110,8 +123,15 @@ namespace Repository
 			}
 			else if(quantity > 0)
 			{
-				
-				var frigeProduct = new FridgeProduct { Fridge = fridge, FridgeId = fridge.Id, Product = product, ProductId = product.Id, Quantity = quantity };
+
+				var frigeProduct = new FridgeProduct
+				{
+					Fridge = fridge,
+					FridgeId = fridge.Id,
+					Product = product,
+					ProductId = product.Id,
+					Quantity = quantity
+				};
 				fridge.FridgeProducts.Add(frigeProduct);
 				Update(fridge);
 				await context.SaveChangesAsync();
@@ -120,7 +140,11 @@ namespace Repository
 
 		public void RemoveProductFromFridge(Guid fridgeId, Guid productId)
 		{
-			var fridge = FindByCondition(f => f.Id == fridgeId, true).Include(f => f.FridgeProducts).ThenInclude(fp => fp.Product).FirstOrDefault();
+			var fridge = FindByCondition(f => f.Id == fridgeId, true)
+				.Include(f => f.FridgeProducts)
+				.ThenInclude(fp => fp.Product)
+				.FirstOrDefault();
+
 			if (fridge == null)
 				throw new ArgumentException($"There is no fridge with this id {fridgeId}");
 
@@ -134,7 +158,10 @@ namespace Repository
 
 		public async Task RemoveProductFromFridgeAsync(Guid fridgeId, Guid productId)
 		{
-			var fridge = await FindByCondition(f => f.Id == fridgeId, true).Include(f => f.FridgeProducts).ThenInclude(fp => fp.Product).FirstOrDefaultAsync();
+			var fridge = await FindByCondition(f => f.Id == fridgeId, true)
+				.Include(f => f.FridgeProducts)
+				.ThenInclude(fp => fp.Product)
+				.FirstOrDefaultAsync();
 			if (fridge == null)
 				throw new ArgumentException($"There is no fridge with this id {fridgeId}");
 

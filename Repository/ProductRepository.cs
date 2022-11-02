@@ -41,14 +41,16 @@ namespace Repository
 
 		public int? GetDefaultQuantity(Guid prodId)
 		{
-			Product prod = FindByCondition(p => p.Id == prodId, false).FirstOrDefault();
+			Product prod = FindByCondition(p => p.Id == prodId, false)
+				.FirstOrDefault();
 			context.ChangeTracker.Clear();
 			return prod?.DefaultQuantity;
 		}
 
 		public async Task<int?> GetDefaultQuantityAsync(Guid prodId)
 		{
-			Product prod = await FindByCondition(p => p.Id == prodId, false).FirstOrDefaultAsync();
+			Product prod = await FindByCondition(p => p.Id == prodId, false)
+				.FirstOrDefaultAsync();
 			context.ChangeTracker.Clear();
 			return prod?.DefaultQuantity;
 		}

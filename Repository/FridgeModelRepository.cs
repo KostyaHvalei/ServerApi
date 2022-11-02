@@ -23,7 +23,8 @@ namespace Repository
 			.ToList();
 
 		public FridgeModel GetFridgeModel(Guid fridgeModelId, bool trackChanges) =>
-			FindByCondition(fm => fm.Id.Equals(fridgeModelId), trackChanges).SingleOrDefault();
+			FindByCondition(fm => fm.Id.Equals(fridgeModelId), trackChanges)
+			.SingleOrDefault();
 
 		public async Task<IEnumerable<FridgeModel>> GetAllFridgeModelsAsync(bool trackChanges) =>
 			await FindAll(trackChanges)
@@ -31,7 +32,8 @@ namespace Repository
 			.ToListAsync();
 
 		public async Task<FridgeModel> GetFridgeModelAsync(Guid fridgeModelId, bool trackChanges) =>
-			await FindByCondition(fm => fm.Id.Equals(fridgeModelId), trackChanges).SingleOrDefaultAsync();
+			await FindByCondition(fm => fm.Id.Equals(fridgeModelId), trackChanges)
+			.SingleOrDefaultAsync();
 
 		public void CreateFridgeModel(FridgeModel fridgeModel) => Create(fridgeModel);
 

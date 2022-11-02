@@ -62,7 +62,12 @@ namespace ServerApi.Controllers
 			}
 			else
 			{
-				var productDTO = new ProductDTO { Id = product.Id, Name = product.Name, DefaultQuantity = product.DefaultQuantity };
+				var productDTO = new ProductDTO 
+				{
+					Id = product.Id,
+					Name = product.Name,
+					DefaultQuantity = product.DefaultQuantity 
+				};
 				return Ok(productDTO);
 			}
 		}
@@ -82,11 +87,20 @@ namespace ServerApi.Controllers
 				return UnprocessableEntity(ModelState);
 			}
 
-			Product product_to_create = new Product { Name = product.Name, DefaultQuantity = product.DefaultQuantity };
+			Product product_to_create = new Product
+			{ 
+				Name = product.Name,
+				DefaultQuantity = product.DefaultQuantity
+			};
 			_repository.Product.CreateProduct(product_to_create);
 			await _repository.SaveAsync();
 
-			var productDTO = new ProductDTO { Id = product_to_create.Id, Name = product_to_create.Name, DefaultQuantity = product_to_create.DefaultQuantity };
+			var productDTO = new ProductDTO 
+			{
+				Id = product_to_create.Id,
+				Name = product_to_create.Name, 
+				DefaultQuantity = product_to_create.DefaultQuantity 
+			};
 
 			return CreatedAtRoute("GetProductById", new { id = product_to_create.Id }, productDTO);
 		}
@@ -113,7 +127,9 @@ namespace ServerApi.Controllers
 				{
 					Directory.CreateDirectory(Path.Combine(_environment.WebRootPath, "Images"));
 				}
-				using (FileStream fileStream = System.IO.File.Create(Path.Combine(_environment.WebRootPath, "Images", imageDTO.ProductId.ToString().ToLower()
+				using (FileStream fileStream = System.IO.File.Create(
+					Path.Combine(_environment.WebRootPath,
+					"Images", imageDTO.ProductId.ToString().ToLower()
 					+ imageDTO.file.FileName.Substring(imageDTO.file.FileName.LastIndexOf('.')))))
 				{
 					imageDTO.file.CopyTo(fileStream);

@@ -67,7 +67,13 @@ namespace ServerApi.Controllers
 					FridgeName = fridge.Name,
 					ModelName = fridge.FridgeModel.Name,
 					OwnerName = fridge.OwnerName,
-					Products = fridge.FridgeProducts.Select(fp => new FridgeProductDTO { ProductId = fp.ProductId, ProductName = fp.Product.Name, Quantity = fp.Quantity })
+					Products = fridge.FridgeProducts
+						.Select(fp => new FridgeProductDTO 
+						{ 
+							ProductId = fp.ProductId,
+							ProductName = fp.Product.Name,
+							Quantity = fp.Quantity 
+						})
 				};
 				return Ok(fridgeDTO);
 			}
@@ -119,11 +125,22 @@ namespace ServerApi.Controllers
 				return UnprocessableEntity(ModelState);
 			}
 
-			Fridge fridge_to_create = new Fridge { Name = fridge.Name, OwnerName = fridge.OwnerName, FridgeModelId = fridge.FridgeModelId };
+			Fridge fridge_to_create = new Fridge 
+			{
+				Name = fridge.Name,
+				OwnerName = fridge.OwnerName,
+				FridgeModelId = fridge.FridgeModelId 
+			};
 			_repository.Fridge.CreateFridge(fridge_to_create);
 			await _repository.SaveAsync();
 
-			var fridgeDTO = new FridgeDTO { Id = fridge_to_create.Id, Name = fridge_to_create.Name, OwnerName = fridge_to_create.OwnerName, ModelName = fridgeModel.Name };
+			var fridgeDTO = new FridgeDTO 
+			{ 
+				Id = fridge_to_create.Id,
+				Name = fridge_to_create.Name, 
+				OwnerName = fridge_to_create.OwnerName, 
+				ModelName = fridgeModel.Name 
+			};
 
 			return CreatedAtRoute("GetFridgeById", new { id = fridge_to_create.Id }, fridgeDTO);
 		}
@@ -183,7 +200,13 @@ namespace ServerApi.Controllers
 				FridgeName = fridge.Name,
 				ModelName = fridge.FridgeModel.Name,
 				OwnerName = fridge.OwnerName,
-				Products = fridge.FridgeProducts.Select(fp => new FridgeProductDTO { ProductId = fp.Id, ProductName = fp.Product.Name, Quantity = fp.Quantity })
+				Products = fridge.FridgeProducts.Select(
+					fp => new FridgeProductDTO 
+					{
+						ProductId = fp.Id,
+						ProductName = fp.Product.Name, 
+						Quantity = fp.Quantity 
+					})
 			};
 
 			return CreatedAtRoute("GetFridgeById", new { id = fridge.Id }, fridgeDTO);
