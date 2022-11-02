@@ -208,8 +208,7 @@ namespace Repository
 				Guid fridId = Guid.Parse(parameters[1].Value.ToString());
 				return (prodId, fridId);
 			}
-			else
-				return (Guid.Empty, Guid.Empty);
+			return (Guid.Empty, Guid.Empty);
 		}
 
 		public async Task<(Guid firdgeId, Guid productId)> GetFridgeProductWithZeroQuantityAsync()
@@ -247,8 +246,7 @@ namespace Repository
 				Guid fridId = Guid.Parse(parameters[1].Value.ToString());
 				return (prodId, fridId);
 			}
-			else
-				return (Guid.Empty, Guid.Empty);
+			return (Guid.Empty, Guid.Empty);
 		}
 
 		public void CreateFridge(Fridge fridge) => Create(fridge);
