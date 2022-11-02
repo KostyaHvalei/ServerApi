@@ -175,22 +175,22 @@ namespace Repository
 
 		public (Guid firdgeId, Guid productId) GetFridgeProductWithZeroQuantity()
 		{
-			var parameter = new List<SqlParameter>();
-			parameter.Add(
+			var parameters = new List<SqlParameter>();
+			parameters.Add(
 				new SqlParameter
 				{
 					ParameterName = "@productId",
 					DbType = DbType.Guid,
 					Direction = ParameterDirection.Output
 				});
-			parameter.Add(
+			parameters.Add(
 				new SqlParameter
 				{
 					ParameterName = "@fridgeId",
 					DbType = DbType.Guid,
 					Direction = ParameterDirection.Output
 				});
-			parameter.Add(
+			parameters.Add(
 				new SqlParameter
 				{
 					ParameterName = "@status",
@@ -199,13 +199,13 @@ namespace Repository
 				});
 
 			var result = context.Database.ExecuteSqlRaw(@"exec GetFridgeProductWithZeroQuantity
-											@productId OUT, @fridgeId OUT, @status OUT", parameter.ToArray());
+											@productId OUT, @fridgeId OUT, @status OUT", parameters.ToArray());
 
-			bool status = bool.Parse(parameter[2].Value.ToString());
+			bool status = bool.Parse(parameters[2].Value.ToString());
 			if (status)
 			{
-				Guid prodId = Guid.Parse(parameter[0].Value.ToString());
-				Guid fridId = Guid.Parse(parameter[1].Value.ToString());
+				Guid prodId = Guid.Parse(parameters[0].Value.ToString());
+				Guid fridId = Guid.Parse(parameters[1].Value.ToString());
 				return (prodId, fridId);
 			}
 			else
@@ -214,22 +214,22 @@ namespace Repository
 
 		public async Task<(Guid firdgeId, Guid productId)> GetFridgeProductWithZeroQuantityAsync()
 		{
-			var parameter = new List<SqlParameter>();
-			parameter.Add(
+			var parameters = new List<SqlParameter>();
+			parameters.Add(
 				new SqlParameter
 				{
 					ParameterName = "@productId",
 					DbType = DbType.Guid,
 					Direction = ParameterDirection.Output
 				});
-			parameter.Add(
+			parameters.Add(
 				new SqlParameter
 				{
 					ParameterName = "@fridgeId",
 					DbType = DbType.Guid,
 					Direction = ParameterDirection.Output
 				});
-			parameter.Add(
+			parameters.Add(
 				new SqlParameter
 				{
 					ParameterName = "@status",
@@ -238,13 +238,13 @@ namespace Repository
 				});
 
 			var result = await context.Database.ExecuteSqlRawAsync(@"exec GetFridgeProductWithZeroQuantity
-											@productId OUT, @fridgeId OUT, @status OUT", parameter.ToArray());
+											@productId OUT, @fridgeId OUT, @status OUT", parameters.ToArray());
 
-			bool status = bool.Parse(parameter[2].Value.ToString());
+			bool status = bool.Parse(parameters[2].Value.ToString());
 			if (status)
 			{
-				Guid prodId = Guid.Parse(parameter[0].Value.ToString());
-				Guid fridId = Guid.Parse(parameter[1].Value.ToString());
+				Guid prodId = Guid.Parse(parameters[0].Value.ToString());
+				Guid fridId = Guid.Parse(parameters[1].Value.ToString());
 				return (prodId, fridId);
 			}
 			else
