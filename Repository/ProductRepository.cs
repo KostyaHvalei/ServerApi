@@ -30,10 +30,14 @@ namespace Repository
 			.ToListAsync();
 
 		public Product GetProduct(Guid productId, bool trackChanges) =>
-			FindByCondition(f => f.Id.Equals(productId), trackChanges).Include(p => p.Fridges).SingleOrDefault();
+			FindByCondition(f => f.Id.Equals(productId), trackChanges)
+			.Include(p => p.Fridges)
+			.SingleOrDefault();
 
 		public async Task<Product> GetProductAsync(Guid productId, bool trackChanges) =>
-			await FindByCondition(f => f.Id.Equals(productId), trackChanges).Include(p => p.Fridges).SingleOrDefaultAsync();
+			await FindByCondition(f => f.Id.Equals(productId), trackChanges)
+			.Include(p => p.Fridges)
+			.SingleOrDefaultAsync();
 
 		public int? GetDefaultQuantity(Guid prodId)
 		{

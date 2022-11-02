@@ -36,10 +36,17 @@ namespace Repository
 			.ToListAsync();
 
 		public Fridge GetFridge(Guid fridgeId, bool trackChanges) =>
-			FindByCondition(f => f.Id.Equals(fridgeId), trackChanges).Include(f => f.Products).Include(f => f.FridgeModel).Include(f => f.FridgeProducts).ThenInclude(fp => fp.Product).SingleOrDefault();
+			FindByCondition(f => f.Id.Equals(fridgeId), trackChanges)
+			.Include(f => f.Products).Include(f => f.FridgeModel)
+			.Include(f => f.FridgeProducts).ThenInclude(fp => fp.Product)
+			.SingleOrDefault();
 
 		public async Task<Fridge> GetFridgeAsync(Guid fridgeId, bool trackChanges) =>
-			await FindByCondition(f => f.Id.Equals(fridgeId), trackChanges).Include(f => f.Products).Include(f => f.FridgeModel).Include(f => f.FridgeProducts).ThenInclude(fp => fp.Product).SingleOrDefaultAsync();
+			await FindByCondition(f => f.Id.Equals(fridgeId), trackChanges)
+			.Include(f => f.Products).Include(f => f.FridgeModel)
+			.Include(f => f.FridgeProducts)
+			.ThenInclude(fp => fp.Product)
+			.SingleOrDefaultAsync();
 
 		public void AddProductToFridge(Guid fridgeId, Product product, int quantity)
 		{
