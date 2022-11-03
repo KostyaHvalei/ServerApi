@@ -16,6 +16,7 @@ namespace Entities.DataTransferObjects
 		public string LastName { get; set; }
 
 		[Required(ErrorMessage = "Username is required")]
+		[StringLength(30, MinimumLength = 3, ErrorMessage = "UserName must have min 3 and max 30 characters")]
 		public string UserName { get; set; }
 
 		[Required(ErrorMessage = "Password is required")]
