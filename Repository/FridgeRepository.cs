@@ -93,37 +93,12 @@ namespace Repository
 			}
 		}
 
-		public async Task AddProductToFridgeAsync(Guid fridgeId, Product product, int quantity)
+		public async Task<bool> AddProductToFridgeAsync(Guid fridgeId, Product product, int quantity)
 		{
-			var fridge = await FindByCondition(f => f.Id == fridgeId, true)
-				.Include(f => f.FridgeProducts)
-				.ThenInclude(fp => fp.Product)
-				.FirstOrDefaultAsync();
+			var fridge = await GetFridgeAsync(fridgeId, true);
 
-			var fp = fridge.FridgeProducts.Find(fp => fp.FridgeId == fridge.Id && fp.ProductId == product.Id);
-
-			if (fp != null)
+			if (fridge.FridgeProducts.FirstOrDefault(fp => fp.ProductId == product.Id) == null)
 			{
-				if (fp.Quantity + quantity > 0)
-				{
-					fp.Quantity += quantity;
-					Update(fridge);
-					await context.SaveChangesAsync();
-				}
-				else if (fp.Quantity + quantity == 0)
-				{
-					fridge.Products.Remove(product);
-					Update(fridge);
-					await context.SaveChangesAsync();
-				}
-				else
-				{
-					throw new ArgumentException("Quantity can't be less then zero");
-				}
-			}
-			else if(quantity > 0)
-			{
-
 				var frigeProduct = new FridgeProduct
 				{
 					Fridge = fridge,
@@ -135,7 +110,27 @@ namespace Repository
 				fridge.FridgeProducts.Add(frigeProduct);
 				Update(fridge);
 				await context.SaveChangesAsync();
+
+				return true;
 			}
+			return false;
+		}
+
+		public async Task<bool> UpdateProductInFridgeAsync(Guid fridgeId, Product product, int quantity)
+		{
+			var fridge = await GetFridgeAsync(fridgeId, true);
+
+			var fridgeProduct = fridge.FridgeProducts.FirstOrDefault(fp => fp.ProductId == product.Id);
+
+			if (fridgeProduct != null)
+			{
+				fridgeProduct.Quantity = quantity;
+				Update(fridge);
+				await context.SaveChangesAsync();
+
+				return true;
+			}
+			return false;
 		}
 
 		public void RemoveProductFromFridge(Guid fridgeId, Guid productId)

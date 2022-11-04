@@ -20,7 +20,8 @@ namespace Contracts
 
 		Task<IEnumerable<Fridge>> GetAllFridgesAsync(bool trackChanges);
 		Task<Fridge> GetFridgeAsync(Guid Id, bool trackChanges);
-		Task AddProductToFridgeAsync(Guid fridgeId, Product product, int quantity);
+		Task<bool> AddProductToFridgeAsync(Guid fridgeId, Product product, int quantity);
+		Task<bool> UpdateProductInFridgeAsync(Guid fridgeId, Product product, int quantity);
 		Task RemoveProductFromFridgeAsync(Guid fridgeId, Guid productId);
 
 		Task<(Guid firdgeId, Guid productId)> GetFridgeProductWithZeroQuantityAsync();

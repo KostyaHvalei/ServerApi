@@ -184,14 +184,9 @@ namespace ServerApi.Controllers
 				return BadRequest("There is no fridge with this id");
 			}
 
-			try
+			if(!await _repository.Fridge.AddProductToFridgeAsync(fridgeId, product, quantity))
 			{
-				await _repository.Fridge.AddProductToFridgeAsync(fridgeId, product, quantity);
-				await _repository.SaveAsync();
-			}
-			catch(Exception ex)
-			{
-				return BadRequest(ex.Message.ToString());
+				return BadRequest("Product with this productId already in fridge with this fridgeId");
 			}
 
 			var fridgeDTO = new FridgeProductsDTO
@@ -210,6 +205,44 @@ namespace ServerApi.Controllers
 			};
 
 			return CreatedAtRoute("GetFridgeById", new { id = fridge.Id }, fridgeDTO);
+		}
+
+		[HttpPut("{fridgeId}/{productId}")]
+		public async Task<IActionResult> UpdateProductInFridge(Guid fridgeId, Guid productId, [FromBody] ProductToAddInFridgeDTO productDTO)
+		{
+			if (productDTO == null)
+			{
+				_logger.LogError("Product object sent from client is null.");
+				return BadRequest("Product object is null");
+			}
+
+			if (!ModelState.IsValid)
+			{
+				_logger.LogError("Invalid model state for the ProductToAddInFridgeDTO object");
+				return UnprocessableEntity(ModelState);
+			}
+
+			var product = await _repository.Product.GetProductAsync(productId, true);
+
+			if (product == null)
+			{
+				_logger.LogError("There is no product with this id.");
+				return BadRequest("There is no product with this id");
+			}
+
+			var fridge = await _repository.Fridge.GetFridgeAsync(fridgeId, false);
+			if (fridge == null)
+			{
+				_logger.LogError("There is no fridge with this id.");
+				return BadRequest("There is no fridge with this id");
+			}
+
+			if(await _repository.Fridge.UpdateProductInFridgeAsync(fridgeId, product, productDTO.Quantity))
+			{
+				return NoContent();
+			}
+			return BadRequest("Something went wrong");
+			
 		}
 
 		[HttpDelete("{fridgeId}/{productId}")]
