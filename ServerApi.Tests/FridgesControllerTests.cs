@@ -210,6 +210,90 @@ namespace ServerApi.Tests
 		}
 
 		[Fact]
+		public async void UpdateProductInFridgeTests()
+		{
+			var repositoryMock = new Mock<IRepositoryManager>();
+			var loggerMock = new Mock<ILoggerManager>();
+			var productToUpdate = new ProductToUpdateInFridgeDTO
+			{
+				Quantity = 10
+			};
+			var product = new Product
+			{
+				Id = new Guid("a4793a96-678a-4cae-a6a3-f7cc51a6b98c"),
+				Name = "Some product",
+				DefaultQuantity = 3
+			};
+			var product_second = new Product
+			{
+				Id = new Guid("b4793a96-678a-4cae-a6a3-f7cc51a6b98c"),
+				Name = "Some product",
+				DefaultQuantity = 3
+			};
+
+			var fridgeModel = new FridgeModel
+			{
+				Id = new Guid("f4793a96-678a-4cae-a6a3-f7cc51a6b98c"),
+				Name = "Model name",
+				Year = 2000
+			};
+			var fridge = new Fridge
+			{
+				Id = new Guid("1fd5ea01-c9e9-4215-b844-fd66e80d3e79"),
+				Name = "Genady Gorin's fridge",
+				OwnerName = "Genady Gorin",
+				FridgeModelId = new Guid("f4793a96-678a-4cae-a6a3-f7cc51a6b98c"),
+				FridgeModel = fridgeModel,
+				Products = new List<Product>(),
+				FridgeProducts = new List<FridgeProduct>
+				{
+					new FridgeProduct
+					{
+						Id = Guid.NewGuid(),
+						ProductId = new Guid("a4793a96-678a-4cae-a6a3-f7cc51a6b98c"),
+						FridgeId = new Guid("1fd5ea01-c9e9-4215-b844-fd66e80d3e79"),
+						Quantity = 10
+					}
+				}
+			};
+
+
+			repositoryMock.Setup(r => r.Product.GetProductAsync(Guid.Parse("a4793a96-678a-4cae-a6a3-f7cc51a6b98c"), true))
+				.Returns(Task.FromResult(product));
+			repositoryMock.Setup(r => r.Product.GetProductAsync(Guid.Parse("b4793a96-678a-4cae-a6a3-f7cc51a6b98c"), true))
+				.Returns(Task.FromResult(product_second));
+
+			repositoryMock.Setup(r => r.Fridge.GetFridgeAsync(Guid.Parse("1fd5ea01-c9e9-4215-b844-fd66e80d3e79"), false))
+				.Returns(Task.FromResult(fridge));
+
+			repositoryMock.Setup(r => r.Fridge.UpdateProductInFridgeAsync(Guid.Parse("1fd5ea01-c9e9-4215-b844-fd66e80d3e79"), product, 10))
+				.Returns(Task.FromResult(false));
+			repositoryMock.Setup(r => r.Fridge.UpdateProductInFridgeAsync(Guid.Parse("1fd5ea01-c9e9-4215-b844-fd66e80d3e79"), product_second, 10))
+				.Returns(Task.FromResult(true));
+
+
+			var controller = new FridgesController(repositoryMock.Object, loggerMock.Object);
+
+			var resultBR = await controller.UpdateProductInFridge(Guid.Empty, Guid.Empty, null);
+			var resultOK = await controller.UpdateProductInFridge(Guid.Parse("1fd5ea01-c9e9-4215-b844-fd66e80d3e79"),
+				new Guid("b4793a96-678a-4cae-a6a3-f7cc51a6b98c"),
+				productToUpdate);
+
+			var resultBR_third = await controller.UpdateProductInFridge(Guid.Empty, new Guid("b4793a96-678a-4cae-a6a3-f7cc51a6b98c"), productToUpdate);
+
+			controller.ModelState.AddModelError("Some", "Error");
+			var resultUE = await controller.UpdateProductInFridge(Guid.Parse("1fd5ea01-c9e9-4215-b844-fd66e80d3e79"), 
+				new Guid("b4793a96-678a-4cae-a6a3-f7cc51a6b98c"),
+				productToUpdate);
+
+
+			Assert.IsType<BadRequestObjectResult>(resultBR);
+			Assert.IsType<BadRequestObjectResult>(resultBR_third);
+			Assert.IsType<UnprocessableEntityObjectResult>(resultUE);
+			Assert.IsType<NoContentResult>(resultOK);
+		}
+
+		[Fact]
 		public async void RemoveProductFromFridgeTests()
 		{
 			var repositoryMock = new Mock<IRepositoryManager>();
