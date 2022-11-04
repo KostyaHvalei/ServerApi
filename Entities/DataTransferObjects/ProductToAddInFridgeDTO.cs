@@ -12,7 +12,7 @@ namespace Entities.DataTransferObjects
 		[Required(ErrorMessage = "ProductId is required")]
 		public Guid ProductId { get; set; }
 
-		[Range(-999999, 999999, ErrorMessage = "Quantity must be equal or more than 0")]
+		[Range(1, 999999, ErrorMessage = "Quantity must be more than 0")]
 		public int Quantity { get; set; }
 	}
 }
