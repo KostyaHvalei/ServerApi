@@ -202,7 +202,7 @@ namespace ServerApi.Controllers
 		}
 
 		[HttpPut("{fridgeId}/{productId}")]
-		public async Task<IActionResult> UpdateProductInFridge(Guid fridgeId, Guid productId, [FromBody] ProductToAddInFridgeDTO productDTO)
+		public async Task<IActionResult> UpdateProductInFridge(Guid fridgeId, Guid productId, [FromBody] ProductToUpdateInFridgeDTO productDTO)
 		{
 			if (productDTO == null)
 			{
