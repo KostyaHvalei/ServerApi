@@ -11,7 +11,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://localhost:44395/api/fridges/92bafc65-cc77-485c-9756-81ad0aaa8008",
+					"raw": "https://localhost:44395/api/fridges/d663e98d-2866-448a-93c1-08daaefc3bce",
 					"protocol": "https",
 					"host": [
 						"localhost"
@@ -20,7 +20,7 @@
 					"path": [
 						"api",
 						"fridges",
-						"92bafc65-cc77-485c-9756-81ad0aaa8008"
+						"d663e98d-2866-448a-93c1-08daaefc3bce"
 					]
 				}
 			},
@@ -93,7 +93,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://localhost:44395/api/products/70497196-fb2d-4e29-8f17-1c2068afd916",
+					"raw": "https://localhost:44395/api/products/e5d96170-0301-459b-96f4-795a65783654",
 					"protocol": "https",
 					"host": [
 						"localhost"
@@ -102,7 +102,7 @@
 					"path": [
 						"api",
 						"products",
-						"70497196-fb2d-4e29-8f17-1c2068afd916"
+						"e5d96170-0301-459b-96f4-795a65783654"
 					]
 				}
 			},
@@ -170,7 +170,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"Name\": \"Bosh s50\",\r\n    \"Year\": 2022\r\n}",
+					"raw": "{\r\n    \"Name\": \"Bosh s60dsa\",\r\n    \"Year\": 2022\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -199,7 +199,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"Name\": \"Some fridge in some place\",\r\n    \"OwnerName\": \"Some person\",\r\n    \"FridgeModelId\": \"f4793a96-678a-4cae-a6a3-f7cc51a6b98c\"\r\n}",
+					"raw": "{\r\n    \"Name\": \"Some fridge in some place test2\",\r\n    \"OwnerName\": \"Some person\",\r\n    \"FridgeModelId\": \"f4793a96-678a-4cae-a6a3-f7cc51a6b98c\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -229,7 +229,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"Name\": \"Ice cream third\",\r\n    \"DefaultQuantity\": 13\r\n}",
+					"raw": "{\r\n    \"Name\": \"Ice cream fivth\",\r\n    \"DefaultQuantity\": 13\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -247,36 +247,6 @@
 						"api",
 						"products",
 						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Add Product To Fridge",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"ProductId\": \"e5d96170-0301-459b-96f4-795a65783654\",\r\n    \"Quantity\": \"42\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://localhost:44395/api/fridges/92bafc65-cc77-485c-9756-81ad0aaa8008",
-					"protocol": "https",
-					"host": [
-						"localhost"
-					],
-					"port": "44395",
-					"path": [
-						"api",
-						"fridges",
-						"92bafc65-cc77-485c-9756-81ad0aaa8008"
 					]
 				}
 			},
@@ -330,7 +300,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "https://localhost:44395/api/fridges/f40b1aff-19f4-4c7b-6bcb-08daaf0ad399",
+					"raw": "https://localhost:44395/api/fridges/721c81d3-2c0c-4dfa-ec14-08daafe5f20d",
 					"protocol": "https",
 					"host": [
 						"localhost"
@@ -339,29 +309,7 @@
 					"path": [
 						"api",
 						"fridges",
-						"f40b1aff-19f4-4c7b-6bcb-08daaf0ad399"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "DeleteProductFromFridge",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "https://localhost:44395/api/fridges/d663e98d-2866-448a-93c1-08daaefc3bce/e5d96170-0301-459b-96f4-795a65783654",
-					"protocol": "https",
-					"host": [
-						"localhost"
-					],
-					"port": "44395",
-					"path": [
-						"api",
-						"fridges",
-						"d663e98d-2866-448a-93c1-08daaefc3bce",
-						"e5d96170-0301-459b-96f4-795a65783654"
+						"721c81d3-2c0c-4dfa-ec14-08daafe5f20d"
 					]
 				}
 			},
@@ -374,7 +322,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n        \"name\": \"Apple\",\r\n        \"defaultQuantity\": 30\r\n}",
+					"raw": "{\r\n        \"name\": \"Apple\",\r\n        \"defaultQuantity\": 40\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -404,7 +352,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n        \"name\": \"Stolovaya n3\",\r\n        \"ownerName\": \"Some guy\",\r\n        \"modelName\": \"Samsung k20\"\r\n}",
+					"raw": "{\r\n        \"name\": \"Stolovaya n3\",\r\n        \"ownerName\": \"Some guyy\",\r\n        \"modelName\": \"Samsung k20\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -485,7 +433,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"firstname\": \"Micle\",\r\n    \"lastname\": \"Moore\",\r\n    \"username\" : \"MMoore\",\r\n    \"password\": \"Password1000\",\r\n    \"email\" : \"miclemoore@mail.com\",\r\n    \"roles\": [\r\n        \"Manager\"\r\n    ]\r\n}",
+					"raw": "{\r\n    \"firstname\": \"Micle\",\r\n    \"lastname\": \"Moore\",\r\n    \"username\" : \"oore\",\r\n    \"password\": \"Password1000\",\r\n    \"email\" : \"miemoore@mail.com\",\r\n    \"roles\": [\r\n        \"Some\"\r\n    ]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -568,6 +516,89 @@
 						"api",
 						"products",
 						"uploadimage"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Product To Fridge",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"ProductId\": \"e5d96170-0301-459b-96f4-795a65783654\",\r\n    \"Quantity\": \"10\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44395/api/fridges/d663e98d-2866-448a-93c1-08daaefc3bce",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44395",
+					"path": [
+						"api",
+						"fridges",
+						"d663e98d-2866-448a-93c1-08daaefc3bce"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Product in Fridge",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Quantity\": \"40\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44395/api/fridges/d663e98d-2866-448a-93c1-08daaefc3bce/e5d96170-0301-459b-96f4-795a65783654",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44395",
+					"path": [
+						"api",
+						"fridges",
+						"d663e98d-2866-448a-93c1-08daaefc3bce",
+						"e5d96170-0301-459b-96f4-795a65783654"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Product From Fridge",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:44395/api/fridges/d663e98d-2866-448a-93c1-08daaefc3bce/e5d96170-0301-459b-96f4-795a65783654",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44395",
+					"path": [
+						"api",
+						"fridges",
+						"d663e98d-2866-448a-93c1-08daaefc3bce",
+						"e5d96170-0301-459b-96f4-795a65783654"
 					]
 				}
 			},
