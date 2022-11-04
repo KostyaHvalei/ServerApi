@@ -146,12 +146,6 @@ namespace ServerApi.Controllers
 		}
 
 
-		/*
-		 * If there is no such product in the fridge - add product
-		 * If there is - change quantity
-		 * Quantity can be negative - this reduses the quantity
-		 * if quanity is zero product will be deleted from fridge
-		 */
 		[HttpPost("{fridgeId}")]
 		public async Task<IActionResult> AddProductToFridge(Guid fridgeId, [FromBody] ProductToAddInFridgeDTO productDTO)
 		{
