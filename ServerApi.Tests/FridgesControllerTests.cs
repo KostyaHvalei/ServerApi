@@ -131,7 +131,7 @@ namespace ServerApi.Tests
 			var loggerMock = new Mock<ILoggerManager>();
 			var productToAdd = new ProductToAddInFridgeDTO
 			{
-				ProductId = new Guid("a4793a96-678a-4cae-a6a3-f7cc51a6b98c"),
+				ProductId = new Guid("b4793a96-678a-4cae-a6a3-f7cc51a6b98c"),
 				Quantity = 10
 			};
 			var product = new Product
@@ -140,6 +140,13 @@ namespace ServerApi.Tests
 				Name = "Some product",
 				DefaultQuantity = 3
 			};
+			var product_second = new Product
+			{
+				Id = new Guid("b4793a96-678a-4cae-a6a3-f7cc51a6b98c"),
+				Name = "Some product",
+				DefaultQuantity = 3
+			};
+
 			var fridgeModel = new FridgeModel
 			{
 				Id = new Guid("f4793a96-678a-4cae-a6a3-f7cc51a6b98c"),
@@ -154,21 +161,39 @@ namespace ServerApi.Tests
 				FridgeModelId = new Guid("f4793a96-678a-4cae-a6a3-f7cc51a6b98c"),
 				FridgeModel = fridgeModel,
 				Products = new List<Product>(),
-				FridgeProducts = new List<FridgeProduct>()
+				FridgeProducts = new List<FridgeProduct>
+				{
+					new FridgeProduct
+					{
+						Id = Guid.NewGuid(),
+						ProductId = new Guid("a4793a96-678a-4cae-a6a3-f7cc51a6b98c"),
+						FridgeId = new Guid("1fd5ea01-c9e9-4215-b844-fd66e80d3e79"),
+						Quantity = 10
+					}
+				}
 			};
 
 			repositoryMock.Setup(r => r.Product.GetProductAsync(Guid.Parse("a4793a96-678a-4cae-a6a3-f7cc51a6b98c"), true))
 				.Returns(Task.FromResult(product));
+			repositoryMock.Setup(r => r.Product.GetProductAsync(Guid.Parse("b4793a96-678a-4cae-a6a3-f7cc51a6b98c"), true))
+				.Returns(Task.FromResult(product_second));
+
 			repositoryMock.Setup(r => r.Fridge.GetFridgeAsync(Guid.Parse("1fd5ea01-c9e9-4215-b844-fd66e80d3e79"), false))
 				.Returns(Task.FromResult(fridge));
 
+			repositoryMock.Setup(r => r.Fridge.AddProductToFridgeAsync(Guid.Parse("1fd5ea01-c9e9-4215-b844-fd66e80d3e79"), product, 10))
+				.Returns(Task.FromResult(false));
+			repositoryMock.Setup(r => r.Fridge.AddProductToFridgeAsync(Guid.Parse("1fd5ea01-c9e9-4215-b844-fd66e80d3e79"), product_second, 10))
+				.Returns(Task.FromResult(true));
+
+	
 
 			var controller = new FridgesController(repositoryMock.Object, loggerMock.Object);
 
 			var resultBR = await controller.AddProductToFridge(Guid.Empty, null);
 			var resultOK = await controller.AddProductToFridge(Guid.Parse("1fd5ea01-c9e9-4215-b844-fd66e80d3e79"), productToAdd);
 
-			productToAdd.ProductId = new Guid("b4793a96-678a-4cae-a6a3-f7cc51a6b98c");
+			productToAdd.ProductId = new Guid("a4793a96-678a-4cae-a6a3-f7cc51a6b98c");
 			var resultBR_second = await controller.AddProductToFridge(Guid.Parse("1fd5ea01-c9e9-4215-b844-fd66e80d3e79"), productToAdd);
 
 			var resultBR_third = await controller.AddProductToFridge(Guid.Empty, productToAdd);
